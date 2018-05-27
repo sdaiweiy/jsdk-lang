@@ -189,11 +189,10 @@ export default class IString {
      * ~~~
      * @param str 目标字符串
      * @param size 最终的字符串长度
+     * @param padStr 给定的需要填充的字符串
      * @return 返回填充完成的字符串,如果给定字符串为null,则返回null
      */
-    static leftPad(str: string, size: number): string | null {
-        return '';
-    }
+    static leftPad(str: string, size: number): string | null;
 
     /**
      * 从左边填充给定的字符串,当长度小于size的大小时
@@ -213,7 +212,7 @@ export default class IString {
      * @param padStr 给定的需要填充的字符串
      * @return 返回填充完成的字符串,如果给定字符串为null,则返回null
      */
-    static leftPad(str: string, size: number, padStr: string): string | null {
+    static leftPad(str: string, size: number, padStr?: string): string | null {
         return '';
     }
 
@@ -279,9 +278,7 @@ export default class IString {
      * @param size 最终的字符串长度
      * @return 返回填充完成的字符串,如果给定字符串为null,则返回null
      */
-    static rightPad(str: string, size: number): string | null {
-        return '';
-    }
+    static rightPad(str: string, size: number): string | null;
 
     /**
      * 从右侧填充给定的字符串,当长度小于size的大小时
@@ -301,7 +298,7 @@ export default class IString {
      * @param padStr 给定的需要填充的字符串
      * @return 返回填充完成的字符串,如果给定字符串为null,则返回null
      */
-    static rightPad(str: string, size: number, padStr: string): string | null {
+    static rightPad(str: string, size: number, padStr?: string): string | null {
         return '';
     }
 

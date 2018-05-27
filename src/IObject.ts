@@ -66,7 +66,7 @@ export default class IObject {
      * @return 复制的结果对象
      */
     static clone<T>(object: T): T {
-        return {};
+        return null;
     }
 
     /**
