@@ -7,7 +7,7 @@ export default class IStringEscape {
      * @return {String} 转义后的字符串
      */
     escapeReg(source: string): string {
-        return '';
+        return String(source).replace(new RegExp("([.*+?^=!:\x24{}()|[\\]\/\\\\])", "g"), '\\\x241');
     }
 
     /**

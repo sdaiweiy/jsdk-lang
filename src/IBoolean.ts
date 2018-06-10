@@ -9,7 +9,7 @@ export default class IBoolean {
      * @return true:是  false:否
      */
     static isBoolean(object: any): boolean {
-        return false;
+        return Object.prototype.toString.call(object) === '[object Boolean]';
     }
 
     /***
@@ -26,41 +26,7 @@ export default class IBoolean {
      * @return true:是  false:否
      */
     static isFalse(object: object): boolean {
-        return false;
-    }
-
-    /***
-     * 判断给定的对象不是false
-     * ~~~
-     * IBoolean.isNotFalse()              = false
-     * IBoolean.isNotFalse(null)          = false
-     * IBoolean.isNotFalse("")            = false
-     * IBoolean.isNotFalse(undefined)     = false
-     * IBoolean.isNotFalse({})            = true
-     * IBoolean.isNotFalse([])            = true
-     * ~~~
-     * @param object
-     * @return true:是  false:否
-     */
-    static isNotFalse(object: object): boolean {
-        return false;
-    }
-
-    /***
-     * 判断给定的对象是false
-     * ~~~
-     * IBoolean.isNotTrue()              = true
-     * IBoolean.isNotTrue(null)          = true
-     * IBoolean.isNotTrue("")            = true
-     * IBoolean.isNotTrue(undefined)     = true
-     * IBoolean.isNotTrue({})            = false
-     * IBoolean.isNotTrue([])            = false
-     * ~~~
-     * @param object
-     * @return true:是  false:否
-     */
-    static isNotTrue(object: object): boolean {
-        return false;
+        return !object === false;
     }
 
     /***
@@ -77,7 +43,7 @@ export default class IBoolean {
      * @return true:是  false:否
      */
     static isTrue(object: object): boolean {
-        return false;
+        return !!object === true;
     }
 
     /***
@@ -86,7 +52,7 @@ export default class IBoolean {
      * @return true/false
      */
     static valueOf(object: object): boolean {
-        return false;
+        return !!object;
     }
 
     /**
@@ -95,7 +61,7 @@ export default class IBoolean {
      * @return 转换后的结果
      */
     static toJson(object: boolean): boolean {
-        return false;
+        return object.valueOf();
     }
 
     /***
@@ -104,7 +70,7 @@ export default class IBoolean {
      * @return "true"/"false"
      */
     static toString(object: object): string {
-        return "";
+        return Boolean.prototype.toString.call(object);
     }
 
 }

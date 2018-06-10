@@ -1,3 +1,6 @@
+import IString from "./IString";
+import INumber from "./INumber";
+
 /***
  * 时间操作对应的工具类接口定义
  */
@@ -10,7 +13,7 @@ export default class IDate {
      * @return true:date > when   false:date < when
      */
     static after(date: Date, when: Date): boolean {
-        return false;
+        return this.compareTo(date, when) > 0;
     }
 
     /**
@@ -20,7 +23,7 @@ export default class IDate {
      * @return true:date < when   false:date > when
      */
     static before(date: Date, when: Date): boolean {
-        return false;
+        return this.compareTo(date, when) < 0;
     }
 
     /**
@@ -31,7 +34,7 @@ export default class IDate {
      * @return true:是 false:否
      */
     static between(date: Date, start: Date, end: Date): boolean {
-        return false;
+        return this.after(date, start) && this.before(date, end);
     }
 
     /**
@@ -41,7 +44,7 @@ export default class IDate {
      * @return 如果date1等于此date2，则返回值 0；如果date1在date2参数之前，则返回小于 0 的值；如果date1在date2参数之后，则返回大于 0 的值。
      */
     static compareTo(date1: Date, date2: Date): number {
-        return 1;
+        return date1.getTime() - date2.getTime();
     }
 
     /**
@@ -70,7 +73,39 @@ export default class IDate {
      * @return 将格式化的字符串结果
      */
     static format(date: Date, pattern: string): string {
-        return '';
+        if ('string' != typeof pattern) {
+            return date.toString();
+        }
+
+        function replacer(patternPart, result) {
+            pattern = pattern.replace(patternPart, result);
+        }
+
+        let pad = IString.padLeft,
+            year = date.getFullYear(),
+            month = date.getMonth() + 1,
+            date2 = date.getDate(),
+            hours = date.getHours(),
+            minutes = date.getMinutes(),
+            seconds = date.getSeconds();
+
+        replacer(/yyyy/g, pad(year + "", 4, "0"));
+        replacer(/yy/g, pad(parseInt(year.toString().slice(2), 10) + "", 2, "0"));
+        replacer(/MM/g, pad(month + "", 2, "0"));
+        replacer(/M/g, month);
+        replacer(/dd/g, pad(date2 + "", 2, "0"));
+        replacer(/d/g, date2);
+
+        replacer(/HH/g, pad(hours + "", 2, "0"));
+        replacer(/H/g, hours);
+        replacer(/hh/g, pad(hours % 12 + "", 2, "0"));
+        replacer(/h/g, hours % 12);
+        replacer(/mm/g, pad(minutes + "", 2, "0"));
+        replacer(/m/g, minutes);
+        replacer(/ss/g, pad(seconds + "", 2, "0"));
+        replacer(/s/g, seconds);
+
+        return pattern;
     }
 
     /**
@@ -79,16 +114,16 @@ export default class IDate {
      * @return  所指的月份中的某一天，使用本地时间。返回值是 1 ~ 31 之间的一个整数。
      */
     static getDay(date: Date): number {
-        return 1;
+        return date.getDate();
     }
 
     /**
-     * 从 Date 对象返回一周中的某一天(0 ~ 6)。
+     * 从 Date 对象返回一周中的某一天(0 ~ 6)。  其中0（周日） 到 6（周六）
      * @param date 目标日期
      * @return
      */
     static getDayOfWeek(date: Date): number {
-        return 1;
+        return date.getDay();
     }
 
     /**
@@ -97,7 +132,8 @@ export default class IDate {
      * @return
      */
     static getDayOfWeekInMonth(date: Date): number {
-        return 1;
+        let day = this.getDayOfWeek(date), d = date.getDate();
+        return Math.ceil((d + 6 - day) / 7);
     }
 
     /**
@@ -106,7 +142,8 @@ export default class IDate {
      * @return
      */
     static getDayOfYear(date: Date): number {
-        return 1;
+        let firstDay = new Date(date.getFullYear(), 0, 1);
+        return Math.ceil((date.getTime() - firstDay.getTime()) / (1000 * 60 * 60 * 24));
     }
 
     /**
@@ -115,7 +152,7 @@ export default class IDate {
      * @return 以本地时间显示。返回值是 0 （午夜） 到 23 （晚上 11 点）之间的一个整数。
      */
     static getHours(date: Date): number {
-        return 1;
+        return date.getHours();
     }
 
     /**
@@ -124,7 +161,7 @@ export default class IDate {
      * @return 毫秒字段，以本地时间显示。返回值是 0 ~ 999 之间的一个整数。
      */
     static getMilliseconds(date: Date): number {
-        return 1;
+        return date.getMilliseconds();
     }
 
     /**
@@ -133,7 +170,7 @@ export default class IDate {
      * @return 分钟字段，以本地时间显示。返回值是 0 ~ 59 之间的一个整数。
      */
     static getMinutes(date: Date): number {
-        return 1;
+        return date.getMinutes();
     }
 
     /**
@@ -142,7 +179,7 @@ export default class IDate {
      * @return 月份字段，使用本地时间。返回值是 0（一月） 到 11（十二月） 之间的一个整数。
      */
     static getMonth(date: Date): number {
-        return 1;
+        return date.getMonth();
     }
 
     /**
@@ -153,7 +190,7 @@ export default class IDate {
      * @return {Number} 季度(1 ~ 4)
      */
     static getQuarter(date): number {
-        return 1;
+        return Math.floor((date.getMonth() + 3) / 3);
     }
 
     /**
@@ -162,7 +199,7 @@ export default class IDate {
      * @return 秒字段，以本地时间显示。返回值是 0 ~ 59 之间的一个整数。
      */
     static getSeconds(date: Date): number {
-        return 1;
+        return date.getSeconds();
     }
 
     /**
@@ -171,7 +208,7 @@ export default class IDate {
      * @return 指定的日期和时间距 1970 年 1 月 1 日午夜（GMT 时间）之间的毫秒数。
      */
     static getTime(date: Date): number {
-        return 1;
+        return date.getTime();
     }
 
     /**
@@ -180,7 +217,10 @@ export default class IDate {
      * @return 星期数
      */
     static getWeekOfMonth(date: Date): number {
-        return 1;
+        let year = date.getFullYear(), month = date.getMonth(),
+            first = new Date(year, month, 1).getDate(),
+            last = 32 - new Date(year, month, 32).getDate();
+        return Math.ceil((first + last) / 7);
     }
 
     /**
@@ -189,7 +229,9 @@ export default class IDate {
      * @return 星期数
      */
     static getWeekOfYear(date: Date): number {
-        return 1;
+        let year = date.getFullYear(), beginDay = new Date(year, 0, 1).getDay(),
+            days = this.isLeapYear(year) ? 366 : 365;
+        return Math.ceil((days - beginDay) / 7.0);
     }
 
     /**
@@ -198,7 +240,7 @@ export default class IDate {
      * @return 本地时间表示时返回的年份。返回值是一个四位数，表示包括世纪值在内的完整年份，而不是两位数的缩写形式。
      */
     static getYear(date: Date): number {
-        return 1;
+        return date.getFullYear();
     }
 
     /**
@@ -206,8 +248,8 @@ export default class IDate {
      * @param date 目标日期
      * @return true:包含  false:不包含
      */
-    static isDate(date: Date): boolean {
-        return false;
+    static isDate(date: any): boolean {
+        return Object.prototype.toString.call(date) === '[object Date]';
     }
 
     /**
@@ -216,6 +258,12 @@ export default class IDate {
      * @return true:闰年 false:非闰年
      */
     static isLeapYear(value: number | Date): boolean {
+        if (this.isDate(value)) {
+            value = this.getYear(<Date>value);
+        }
+        if (INumber.isNumber(value)) {
+            return <number>value % 4 == 0 && (<number>value % 100 != 0 || <number>value % 400 == 0);
+        }
         return false;
     }
 
@@ -224,7 +272,7 @@ export default class IDate {
      * @return
      */
     static now(): number {
-        return 1;
+        return new Date().getTime();
     }
 
     /**
@@ -236,7 +284,19 @@ export default class IDate {
      * @return 字符串对应的日期
      */
     static parse(source: string): Date {
-        return null;
+        let reg = new RegExp("^\\d+(\\-|\\/)\\d+(\\-|\\/)\\d+\x24");
+        if ('string' == typeof source) {
+            if (reg.test(source) || isNaN(Date.parse(source))) {
+                let d = source.split(/ |T/),
+                    d1 = d.length > 1 ? <any[]>d[1].split(/[^\d]/) : [0, 0, 0],
+                    d0 = <any[]>d[0].split(/[^\d]/);
+
+                return new Date(d0[0] - 0, d0[1] - 1, d0[2] - 0, d1[0] - 0, d1[1] - 0, d1[2] - 0);
+            } else {
+                return new Date(source);
+            }
+        }
+        return new Date();
     }
 
     /**
@@ -245,7 +305,7 @@ export default class IDate {
      * @param day 表示一个月中的一天的一个数值（1 ~ 31）。
      */
     static setDay(date: Date, day: number): void {
-
+        date.setDate(day);
     }
 
     /**
@@ -254,7 +314,7 @@ export default class IDate {
      * @param hour 表示小时的数值，介于 0（午夜） ~ 23（晚上11点） 之间
      */
     static setHours(date: Date, hour: number): void {
-
+        date.setHours(hour);
     }
 
     /**
@@ -263,7 +323,7 @@ export default class IDate {
      * @param millisec 表示毫秒的数值，介于 0 ~ 999之间。
      */
     static setMilliseconds(date: Date, millisec: number): void {
-
+        date.setMilliseconds(millisec);
     }
 
     /**
@@ -272,7 +332,7 @@ export default class IDate {
      * @param min 表示分钟的数值，介于 0 ~ 59 之间。
      */
     static setMinutes(date: Date, min: number): void {
-
+        date.setMinutes(min);
     }
 
     /**
@@ -281,7 +341,7 @@ export default class IDate {
      * @param month 一个表示月份的数值，该值介于 0（一月） ~ 11（十二月） 之间。
      */
     static setMonth(date: Date, month: number): void {
-
+        date.setMonth(month);
     }
 
     /**
@@ -290,7 +350,7 @@ export default class IDate {
      * @param sec 表示秒的数值，介于 0 ~ 59 之间。
      */
     static setSeconds(date: Date, sec: number): void {
-
+        date.setSeconds(sec);
     }
 
     /**
@@ -299,7 +359,7 @@ export default class IDate {
      * @param year 示年份的四位整数。用本地时间表示。
      */
     static setYear(date: Date, year: number): void {
-
+        date.setFullYear(year);
     }
 
     /**
@@ -308,7 +368,7 @@ export default class IDate {
      * @param millisec 要设置的日期和时间据 GMT 时间 1970 年 1 月 1 日午夜之间的毫秒数。这种类型的毫秒值可以传递给 Date() 构造函数，可以通过调用 Date.UTC() 和 Date.parse() 方法获得该值。以毫秒形式表示日期可以使它独立于时区。
      */
     static setTime(date: Date, millisec: number): void {
-
+        date.setTime(millisec);
     }
 
     /**
@@ -316,8 +376,20 @@ export default class IDate {
      * @param date 目标日期
      * @return 转换后的结果
      */
-    static toJson(date: Date): object {
-        return null;
+    static toJson(date: Date): string {
+        let result = date.getFullYear() +
+            "-" + IString.padLeft(date.getMonth() + 1 + "", 2, "0") +
+            "-" + IString.padLeft(date.getDate() + "", 2, "0") +
+            "T" + IString.padLeft(date.getHours() + "", 2, "0") +
+            ":" + IString.padLeft(date.getMinutes() + "", 2, "0") +
+            ":" + IString.padLeft(date.getSeconds() + "", 2, "0") +
+            "." + IString.padLeft(date.getMilliseconds() + "", 3, "0") + "Z";
+
+        //date类型在Ie6/7下的写法不同
+        if (isLessIE7) {
+            result = '"' + result + '"';
+        }
+        return result;
     }
 
     /**
@@ -326,7 +398,16 @@ export default class IDate {
      * @return
      */
     static toString(date: Date): string {
-        return '';
+        return this.toJson(date);
     }
 
+}
+
+//保证Lang包可以单独打成一个包,浏览器版本的判定单独写了一个简单的版本
+let isLessIE7 = false;
+try {
+    let version = navigator.appVersion.split(";")[1].replace(/[ ]/g, "");
+    isLessIE7 = (navigator.appName == "Microsoft Internet Explorer" && (version == "MSIE6.0" || version == "MSIE7.0"));
+} catch (e) {
+    isLessIE7 = false;
 }

@@ -9,7 +9,7 @@ export default class INumber {
      * @return 如果 number 是有限数字（或可转换为有限数字），那么返回 true。否则，如果 number 是 NaN（非数字），或者是正、负无穷大的数，则返回 false。
      */
     static isFinite(num: number): boolean {
-        return false;
+        return isFinite(num) && !isNaN(parseFloat(num + ""));
     }
 
     /**
@@ -18,7 +18,7 @@ export default class INumber {
      * @return 如果 x 是特殊的非数字值 NaN（或者能被转换为这样的值），返回的值就是 true。如果 x 是其他值,则返回 false。
      */
     static isNaN(num: number): boolean {
-        return false;
+        return this.isNumber(num) && isNaN(num);
     }
 
     /**
@@ -27,25 +27,25 @@ export default class INumber {
      * @return true:是 false:否
      */
     static isNumber(object: any): boolean {
-        return false;
+        return Object.prototype.toString.call(object) === '[object Number]';
     }
 
     /***
      * 根据给定的参数,返回其中的最大值
-     * @param num 给定参数
+     * @param nums 给定参数
      * @return 所有元素中的最大值,如果没有传参数,抛出异常
      */
-    static max(...num: number[]): number {
-        return 1;
+    static max(...nums: number[]): number {
+        return Math.max.apply(Math, nums);
     }
 
     /***
      * 根据给定的参数,返回其中的最小值
-     * @param num 给定参数
+     * @param nums 给定参数
      * @return 所有元素中的最小值,如果没有传参数,抛出异常
      */
-    static min(...num: number[]): number {
-        return 2;
+    static min(...nums: number[]): number {
+        return Math.min.apply(Math, nums);
     }
 
     /***
@@ -54,7 +54,7 @@ export default class INumber {
      * @return 转换成功,为原值,否则为NaN
      */
     static parseFloat(num: any): number {
-        return 1;
+        return parseFloat(num);
     }
 
     /***
@@ -63,7 +63,8 @@ export default class INumber {
      * @return 转换成功,为原值,否则为0.0
      */
     static parseFloat1(num: any): number {
-        return 2;
+        let value = parseFloat(num);
+        return this.isNaN(value) ? 0.0 : value;
     }
 
     /***
@@ -74,7 +75,7 @@ export default class INumber {
      * @return 转换成功,为原值,否则为NaN
      */
     static parseInt(num: any, radix?: number): number {
-        return 1;
+        return parseInt(num, radix ? radix : 10);
     }
 
     /***
@@ -84,7 +85,8 @@ export default class INumber {
      * @return 转换成功,为原值,否则为0
      */
     static parseInt1(num: any, radix?: number): number {
-        return 2;
+        let value = parseInt(num, radix);
+        return this.isNaN(value) ? 0 : value;
     }
 
     /**
@@ -94,7 +96,7 @@ export default class INumber {
      * @return 生成的随机整数
      */
     static randomInt(min: number, max: number): number {
-        return 1;
+        return Math.floor(Math.random() * (max - min + 1) + min);
     }
 
     /**
@@ -103,8 +105,49 @@ export default class INumber {
      * @param decimal 给定小数的位数
      * @return 转换后的结果
      */
-    static toFixed(num: number, decimal: number): number {
-        return 2;
+    static toFixed(num: number, decimal: number): string {
+        decimal = decimal || 0;
+        let s = this.toString(num);
+        let decimalIndex = s.indexOf('.');
+        if (decimalIndex < 0) {
+            let fraction = '';
+            for (let i = 0; i < decimal; i++) {
+                fraction += '0';
+            }
+            return s + '.' + fraction;
+        }
+        let numDigits = s.length - 1 - decimalIndex;
+        if (numDigits <= decimal) {
+            let fraction = '';
+            for (let i = 0; i < decimal - numDigits; i++) {
+                fraction += '0';
+            }
+            return s + fraction;
+        }
+        let digits: any[] = s.split('');
+        let pos = decimalIndex + decimal;
+        let roundDigit = digits[pos + 1];
+        if (roundDigit > 4) {
+            //跳过小数点
+            if (pos == decimalIndex) {
+                --pos;
+            }
+            digits[pos] = Number(digits[pos] || 0) + 1;
+            //循环进位
+            while (digits[pos] == 10) {
+                digits[pos] = 0;
+                --pos;
+                if (pos == decimalIndex) {
+                    --pos;
+                }
+                digits[pos] = Number(digits[pos] || 0) + 1;
+            }
+        }
+        //避免包含末尾的.符号
+        if (decimal == 0) {
+            decimal--;
+        }
+        return digits.slice(0, decimalIndex + decimal + 1).join('');
     }
 
     /**
@@ -112,8 +155,8 @@ export default class INumber {
      * @param num 目标数值
      * @return 1=>'1'
      */
-    static toJson(num: number): string {
-        return '';
+    static toJson(num: number): number {
+        return num;
     }
 
     /**
@@ -122,7 +165,7 @@ export default class INumber {
      * @return
      */
     static toString(num: number): string {
-        return '';
+        return num + "";
     }
 
     /***
@@ -131,7 +174,7 @@ export default class INumber {
      * @return 转换为Number后的结果
      */
     static valueOf(object: any): number {
-        return 1;
+        return Number(object);
     }
 
 }

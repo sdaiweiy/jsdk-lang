@@ -1,3 +1,5 @@
+import IObject from "./IObject";
+
 /***
  * 数组操作对应的工具类接口定义
  */
@@ -6,32 +8,31 @@ export default class IArray {
     /**
      * 向数组添加指定元素
      * @param array 给定的数组
-     * @param items 给定的元素
+     * @param item 给定的元素
      * @optional
-     * @param index 可选参数,需要插入的索引位置,从0开始
+     * @param index 可选参数,需要插入的索引位置,默认插入最后一个位置
      */
-    static add<T>(array: T[], items: T, index?: number): void {
-
+    static add<T>(array: T[], item: T, index: number = array.length): void {
+        array.splice(index, 0, item);
     }
 
     /**
      * 由若干个数组组合而成的新数组,数组的指针指向给定数组
      * ~~~
-     * var alpha = ['a', 'b']{
-       
-    }
-     * var numeric = [1, 2]{
-       
-    }
-     * var result = addAll(alpha, numeric){
-       
-    }
+     * var alpha = ['a', 'b'];
+     * var numeric = [1, 2];
+     * var result = addAll(alpha, numeric);
      * ~~~
-     * @param target 给定的数组
+     * @param array 给定的数组
      * @param source ...  需要合并的数组
      */
-    static addAll<T>(target: T[], ...source: T[]): void {
-
+    static addAll<T>(array: T[], ...source: T[][]): void {
+        for (let i = 1, len = source.length; i < len; i++) {
+            let sub = source[i];
+            for (let j = 0, len1 = sub.length; j < len1; j++) {
+                array.push(sub[j]);
+            }
+        }
     }
 
     /***
@@ -39,18 +40,16 @@ export default class IArray {
      * @param array 给定的数组
      */
     static clear<T>(array: T[]): void {
-
+        array.length = 0;
     }
 
     /**
-     * 数组克隆(浅克隆),即数组中的对象指针不发生改变,如需要深度克隆,请使用Dev.ObjectUtils.clone(){
-       
-    }
+     * 数组克隆(浅克隆),即数组中的对象指针不发生改变,如需要深度克隆,请使用IObject.clone()
      * @param array 给定的数组
      * @return  返回克隆结果集
      */
     static clone<T>(array: T[]): T[] {
-        return [];
+        return array.slice(0);
     }
 
     /***
@@ -60,7 +59,7 @@ export default class IArray {
      * @return  如果此列表中包含指定的元素，则返回 true。
      */
     static contains<T>(array: T[], item: T): boolean {
-        return false;
+        return this.indexOf(array, item) !== -1;
     }
 
     /**
@@ -71,8 +70,12 @@ export default class IArray {
      *                  item:数组中正在处理的当前元素。
      *                  array:正在操作的数组
      */
-    static each<T>(array: T[], iterator: (key: any, value: any, object: any) => (boolean | void)): void {
-
+    static each<T>(array: T[], iterator: (index: number, item: T, array: T[]) => (boolean | void)): void {
+        for (let i = 0, len = array.length; i < len; i++) {
+            if (iterator(i, array[i], array) === false) {
+                break;
+            }
+        }
     }
 
     /**
@@ -84,8 +87,14 @@ export default class IArray {
      *               array:正在操作的数组
      * @return  符合条件的结果集
      */
-    static filter<T>(array: T[], fn: (key: any, value: any, object: any) => (boolean )): T[] {
-        return [];
+    static filter<T>(array: T[], fn: (key: any, value: any, array: T[]) => (boolean )): T[] {
+        let result = [];
+        this.each(array, function (index, item) {
+            if (fn(index, item, array)) {
+                result.push(item);
+            }
+        });
+        return result;
     }
 
     /**
@@ -95,7 +104,7 @@ export default class IArray {
      * @return  true:超出位置  false:未超出
      */
     static indexOutOfBounds<T>(array: T[], index: number): boolean {
-        return false;
+        return index < 0 || index >= array.length;
     }
 
     /***
@@ -104,7 +113,10 @@ export default class IArray {
      * @return  true:是 false:不是
      */
     static isArray(object: any): boolean {
-        return false;
+        if (!Array.isArray) {
+            return Object.prototype.toString.call(object) === '[object Array]';
+        }
+        return Array.isArray(object);
     }
 
     /**
@@ -113,7 +125,7 @@ export default class IArray {
      * @return  如果此列表中没有元素，则返回 true,否则返回false
      */
     static isNullOrEmpty<T>(array: T[]): boolean {
-        return false;
+        return !this.isArray(array) || array.length == 0;
     }
 
     /**
@@ -122,7 +134,7 @@ export default class IArray {
      * @return  如果此列表中有元素，则返回 true,否则返回false
      */
     static isNotNullOrEmpty<T>(array: T[]): boolean {
-        return false;
+        return !this.isNullOrEmpty(array);
     }
 
     /**
@@ -133,7 +145,12 @@ export default class IArray {
      * @param index 搜索的起始索引位置
      * @return  返回此列表中首次出现的指定元素的索引，或如果此列表不包含元素，则返回 -1。
      */
-    static indexOf<T>(array: T[], item: T, index?: number): number {
+    static indexOf<T>(array: T[], item: T, index: number = 0): number {
+        for (let i = index, length = array.length; i < length; i++) {
+            if (IObject.equals(array[i], item)) {
+                return i;
+            }
+        }
         return -1;
     }
 
@@ -145,7 +162,7 @@ export default class IArray {
      * @return
      */
     static join<T>(array: T[], separator?: string): string {
-        return '';
+        return Array.prototype.join.call(array, separator);
     }
 
     /***
@@ -155,6 +172,11 @@ export default class IArray {
      * @return  返回此列表中最后一次出现的指定元素的索引，或如果此列表不包含索引，则返回 -1。
      */
     static lastIndexOf<T>(array: T[], item: T): number {
+        for (let len = array.length - 1; len >= 0; len--) {
+            if (IObject.equals(array[len], item)) {
+                return len;
+            }
+        }
         return -1;
     }
 
@@ -165,7 +187,10 @@ export default class IArray {
      * @return  被移除的元素
      */
     static remove<T>(array: T[], index: number): T {
-        return null;
+        if (this.indexOutOfBounds(array, index)) {
+            throw new RangeError("index out of bounds");
+        }
+        return array.splice(index, 1)[0];
     }
 
     /**
@@ -175,7 +200,7 @@ export default class IArray {
      * @return  被移除的元素
      */
     static removeByValue<T>(array: T[], item: T): T {
-        return null;
+        return this.remove(array, this.indexOf(array, item));
     }
 
     /***
@@ -186,7 +211,10 @@ export default class IArray {
      * @return  被移除的元素组成的新数组
      */
     static removeRange<T>(array: T[], startIndex: number, endIndex: number): T[] {
-        return [];
+        if (this.indexOutOfBounds(array, startIndex) || this.indexOutOfBounds(array, endIndex)) {
+            throw new RangeError("startIndex or endIndex out of bounds");
+        }
+        return array.splice(startIndex, (endIndex - startIndex));
     }
 
     /**
@@ -195,7 +223,7 @@ export default class IArray {
      * @return  顺序颠倒后的数组
      */
     static reverse<T>(array: T[]): T[] {
-        return [];
+        return array.reverse();
     }
 
     /**
@@ -205,7 +233,7 @@ export default class IArray {
      * @return  返回排序后的数组。原数组已经被排序后的数组代替。
      */
     static sort<T>(array: T[], fn: (a: T, b: T) => number): T[] {
-        return [];
+        return fn ? array.sort(fn) : array.sort(); //不判定的话ie8以下会有问题
     }
 
     /**
@@ -217,7 +245,10 @@ export default class IArray {
      * @return  提取元素组成的新数组
      */
     static subArray<T>(array: T[], startIndex: number, endIndex?: number): T[] {
-        return [];
+        if (this.indexOutOfBounds(array, startIndex) || this.indexOutOfBounds(array, endIndex)) {
+            throw new RangeError("startIndex or endIndex out of bounds");
+        }
+        return Array.prototype.slice.call(array, startIndex, endIndex ? endIndex : array.length);
     }
 
     /***
@@ -226,7 +257,12 @@ export default class IArray {
      * @return  数组转成的Json字符串
      */
     static toJson<T>(array: T[]): string {
-        return '';
+        let result = ["[", ""], len = array.length, i;
+        for (i = 0; i < len; i += 1) {
+            result.push(IObject.toJson(array[i]), ',');
+        }
+        result[result.length - 1] = ']';
+        return result.join("");
     }
 
     /***
@@ -235,7 +271,7 @@ export default class IArray {
      * @return   toString 方法把该数组转成一个字符串
      */
     static toString<T>(array: T[]): string {
-        return '';
+        return Array.prototype.toString.call(array);
     }
 
 }

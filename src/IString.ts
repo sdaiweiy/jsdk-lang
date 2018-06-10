@@ -1,3 +1,5 @@
+import IObject from "./IObject";
+
 /***
  * 字符串操作对应的工具类接口定义
  */
@@ -10,7 +12,7 @@ export default class IString {
      * @return 字符串中第一个字符的下标是 0。如果参数 index 不在 0 与 string.length 之间，该方法将返回一个空字符串。
      */
     static charAt(str: string, index: number): string {
-        return '';
+        return str.charAt(index);
     }
 
     /**
@@ -20,7 +22,7 @@ export default class IString {
      * @return true:包含 false:不包含
      */
     static contains(str: string, sbustr: string): boolean {
-        return false;
+        return this.indexOf(str, sbustr) != -1;
     }
 
     /***
@@ -39,7 +41,7 @@ export default class IString {
      * @return true:是  false:否
      */
     static endWith(source: string, suffix: string): boolean {
-        return false;
+        return RegExp(suffix + "$").test(source);
     }
 
     /***
@@ -52,7 +54,28 @@ export default class IString {
      * @return 格式化后的结果
      */
     static format(str: string, context: object): string {
-        return '';
+        if (!context) {
+            context = window;
+        }
+        let replacer = function (str, match) {
+            let replacement, subs = match.split(/\.+/);
+            for (let i = 0, len = subs.length; i < len; i++) {
+                if (i == 0) {
+                    replacement = context;
+                }
+                if (replacement === undefined) {
+                    break;
+                }
+                replacement = replacement[subs[i]];
+            }
+
+            if (typeof replacement == 'undefined') {
+                return 'undefined';
+            } else {
+                return replacement;
+            }
+        };
+        return str.replace(/\{\{([\w.]+?)\}\}/g, replacer);
     }
 
     /**
@@ -62,8 +85,8 @@ export default class IString {
      * @param index 搜索的起始位置
      * @return -1:substr 不在 str中,其它则表示subStr其所在的位置
      */
-    static indexOf(str: string, substr: string, index?: number): number {
-        return 1;
+    static indexOf(str: string, substr: string, index: number = 0): number {
+        return str.indexOf(substr, index);
     }
 
     /**
@@ -79,7 +102,7 @@ export default class IString {
      * @return {Boolean}
      */
     static isBlank(str: string): boolean {
-        return false;
+        return this.trim(str) === "";
     }
 
     /**
@@ -95,7 +118,7 @@ export default class IString {
      * @return {Boolean}
      */
     static isEmpty(str: string): boolean {
-        return false;
+        return str === "";
     }
 
     /**
@@ -110,7 +133,7 @@ export default class IString {
      * @return {Boolean}
      */
     static isNotBlank(str: string): boolean {
-        return false;
+        return !this.isBlank(str);
     }
 
     /**
@@ -126,7 +149,7 @@ export default class IString {
      * @return {Boolean}
      */
     static isNotEmpty(str: string): boolean {
-        return false;
+        return !this.isEmpty(str);
     }
 
     /**
@@ -135,7 +158,7 @@ export default class IString {
      * @return {Boolean}  true:不是空字符串  false:是空字符串
      */
     static isNotNullOrEmpty(str: string): boolean {
-        return false;
+        return !this.isNullOrEmpty(str);
     }
 
     /**
@@ -144,7 +167,7 @@ export default class IString {
      * @return {Boolean} true:空字符串  false:不是空字符串
      */
     static isNullOrEmpty(str: string): boolean {
-        return false;
+        return IObject.isUndefined(str) || str == "";
     }
 
     /**
@@ -153,17 +176,7 @@ export default class IString {
      * @return {Boolean} true:是字符串类型  false:不是字符串类型
      */
     static isString(str: any): boolean {
-        return false;
-    }
-
-    /***
-     * 将给定的数组按分隔符拼装
-     * @param {[]} array 给定的数组
-     * @param separator 分隔符
-     * @return {string} 拼装结果
-     */
-    static join(array: any[], separator: string): string {
-        return '';
+        return Object.prototype.toString.call(str) === '[object String]';
     }
 
     /**
@@ -173,47 +186,91 @@ export default class IString {
      * @param index 搜索的起始位置
      * @return {Number} -1:subStr 不在 str中,其它则表示substr最后一次在的位置
      */
-    static lastIndexOf(str: string, substr: string, index?: number): number {
-        return 1;
+    static lastIndexOf(str: string, substr: string, index: number = str.length): number {
+        return str.lastIndexOf(substr, index);
     }
-
-    /**
-     * 从左边填充' '字符串,当长度小于size的大小时
-     * ~~~
-     * IString.leftPad(null,*)   = null
-     * IString.leftPad("", 3)     = "   "
-     * IString.leftPad("bat", 3)  = "bat"
-     * IString.leftPad("bat", 5)  = "  bat"
-     * IString.leftPad("bat", 1)  = "bat"
-     * IString.leftPad("bat", -1) = "bat"
-     * ~~~
-     * @param str 目标字符串
-     * @param size 最终的字符串长度
-     * @param padStr 给定的需要填充的字符串
-     * @return 返回填充完成的字符串,如果给定字符串为null,则返回null
-     */
-    static leftPad(str: string, size: number): string | null;
 
     /**
      * 从左边填充给定的字符串,当长度小于size的大小时
      * ~~~
-     * IString.leftPad(null, *, *)      = null
-     * IString.leftPad("", 3, "z")      = "zzz"
-     * IString.leftPad("bat", 3, "yz")  = "bat"
-     * IString.leftPad("bat", 5, "yz")  = "yzbat"
-     * IString.leftPad("bat", 8, "yz")  = "yzyzybat"
-     * IString.leftPad("bat", 1, "yz")  = "bat"
-     * IString.leftPad("bat", -1, "yz") = "bat"
-     * IString.leftPad("bat", 5, null)  = "  bat"
-     * IString.leftPad("bat", 5, "")    = "  bat"
+     * IString.padLeft(null,*)   = null
+     * IString.padLeft("", 3)     = "   "
+     * IString.padLeft("bat", 3)  = "bat"
+     * IString.padLeft("bat", 5)  = "  bat"
+     * IString.padLeft("bat", 1)  = "bat"
+     * IString.padLeft("bat", -1) = "bat"
+     * IString.padLeft(null, *, *)      = null
+     * IString.padLeft("", 3, "z")      = "zzz"
+     * IString.padLeft("bat", 3, "yz")  = "bat"
+     * IString.padLeft("bat", 5, "yz")  = "yzbat"
+     * IString.padLeft("bat", 8, "yz")  = "yzyzybat"
+     * IString.padLeft("bat", 1, "yz")  = "bat"
+     * IString.padLeft("bat", -1, "yz") = "bat"
+     * IString.padLeft("bat", 5, null)  = "  bat"
+     * IString.padLeft("bat", 5, " ")    = "  bat"
      * ~~~
      * @param str 目标字符串
      * @param size 最终的字符串长度
+     * @optional
      * @param padStr 给定的需要填充的字符串
      * @return 返回填充完成的字符串,如果给定字符串为null,则返回null
      */
-    static leftPad(str: string, size: number, padStr?: string): string | null {
-        return '';
+    static padLeft(str: string, size: number, padStr: string = " "): string | null {
+        if (str.length >= size) {
+            return str;
+        }
+
+        let paddingString = new String(),
+            len = (size - str.length) / padStr.length,
+            gap = size - (len * padStr.length);
+
+        for (let i = 0; i < len; i++) {
+            paddingString += padStr;
+        }
+        paddingString += this.substr(padStr, 0, gap);
+        return paddingString + str;
+    }
+
+
+    /**
+     * 从右侧填充给定的字符串,当长度小于size的大小时
+     * ~~~
+     * IString.padRight(null, *)   = null
+     * IString.padRight("", 3)     = "   "
+     * IString.padRight("bat", 3)  = "bat"
+     * IString.padRight("bat", 5)  = "bat  "
+     * IString.padRight("bat", 1)  = "bat"
+     * IString.padRight("bat", -1) = "bat"
+     * IString.padRight(null, *, *)      = null
+     * IString.padRight("", 3, "z")      = "zzz"
+     * IString.padRight("bat", 3, "yz")  = "bat"
+     * IString.padRight("bat", 5, "yz")  = "batyz"
+     * IString.padRight("bat", 8, "yz")  = "batyzyzy"
+     * IString.padRight("bat", 1, "yz")  = "bat"
+     * IString.padRight("bat", -1, "yz") = "bat"
+     * IString.padRight("bat", 5, null)  = "bat  "
+     * IString.padRight("bat", 5, "")    = "bat  "
+     * ~~~
+     * @param str 目标字符串
+     * @param size 最终的字符串长度
+     * @optional
+     * @param padStr 给定的需要填充的字符串
+     * @return 返回填充完成的字符串,如果给定字符串为null,则返回null
+     */
+    static padRight(str: string, size: number, padStr: string = ""): string | null {
+        if (str.length >= size) {
+            return str;
+        }
+
+        let paddingString = new String(),
+            len = (size - str.length) / padStr.length,
+            gap = size - (len * padStr.length);
+
+        for (let i = 0; i < len; i++) {
+            paddingString += padStr;
+        }
+        paddingString += this.substr(padStr, 0, gap);
+        return str + paddingString;
     }
 
     /**
@@ -224,7 +281,7 @@ export default class IString {
      * @return 替换完成的字符串
      */
     static replace(str: string, rule: string | RegExp, replacement: string): string {
-        return '';
+        return str.replace(rule, replacement);
     }
 
     /**
@@ -250,7 +307,7 @@ export default class IString {
      * @return 替换完成的字符串
      */
     static replaceFirst(str: string, rule: string | RegExp, replacement: string): string {
-        return '';
+        return str.replace(rule, replacement);
     }
 
     /**
@@ -261,45 +318,7 @@ export default class IString {
      * @return 返回替换后的文本信息
      */
     static replaceAll(str: string, findText: string, replaceText: string): string {
-        return '';
-    }
-
-    /**
-     * 从右侧填充' '字符串,当长度小于size的大小时
-     * ~~~
-     * IString.rightPad(null, *)   = null
-     * IString.rightPad("", 3)     = "   "
-     * IString.rightPad("bat", 3)  = "bat"
-     * IString.rightPad("bat", 5)  = "bat  "
-     * IString.rightPad("bat", 1)  = "bat"
-     * IString.rightPad("bat", -1) = "bat"
-     * ~~~
-     * @param str 目标字符串
-     * @param size 最终的字符串长度
-     * @return 返回填充完成的字符串,如果给定字符串为null,则返回null
-     */
-    static rightPad(str: string, size: number): string | null;
-
-    /**
-     * 从右侧填充给定的字符串,当长度小于size的大小时
-     * ~~~
-     * IString.rightPad(null, *, *)      = null
-     * IString.rightPad("", 3, "z")      = "zzz"
-     * IString.rightPad("bat", 3, "yz")  = "bat"
-     * IString.rightPad("bat", 5, "yz")  = "batyz"
-     * IString.rightPad("bat", 8, "yz")  = "batyzyzy"
-     * IString.rightPad("bat", 1, "yz")  = "bat"
-     * IString.rightPad("bat", -1, "yz") = "bat"
-     * IString.rightPad("bat", 5, null)  = "bat  "
-     * IString.rightPad("bat", 5, "")    = "bat  "
-     * ~~~
-     * @param str 目标字符串
-     * @param size 最终的字符串长度
-     * @param padStr 给定的需要填充的字符串
-     * @return 返回填充完成的字符串,如果给定字符串为null,则返回null
-     */
-    static rightPad(str: string, size: number, padStr?: string): string | null {
-        return '';
+        return str.replace(new RegExp(findText, "g"), replaceText);
     }
 
     /**
@@ -309,7 +328,7 @@ export default class IString {
      * @return 分割后的字符组成的数组
      */
     static split(str: string, separator: string): string[] {
-        return [];
+        return str.split(separator);
     }
 
     /***
@@ -326,7 +345,7 @@ export default class IString {
      * @return true:是  false:否
      */
     static startWith(source: string, prefix: string): boolean {
-        return false;
+        return new RegExp("^" + prefix).test(source);
     }
 
     /**
@@ -335,7 +354,7 @@ export default class IString {
      * @return 清除完html标签的字符串
      */
     static stripHTML(source: string): string {
-        return '';
+        return String(source || '').replace(/<[^>]+>/g, '');
     }
 
     /**
@@ -345,8 +364,11 @@ export default class IString {
      * @param length 子串中的字符数。必须是数值。如果省略了该参数，那么返回从 stringObject 的开始位置到结尾的字串。
      * @return 一个新的字符串，包含从 stringObject 的 start（包括 start 所指的字符） 处开始的 length 个字符。如果没有指定 length，那么返回的字符串包含从 start 到 stringObject 的结尾的字符。
      */
-    static substr(str: string, start: number, length?: number): string {
-        return '';
+    static substr(str: string, start: number, length: number = str.length): string {
+        if (start < 0) { //兼容IE8以下的substr的负数问题
+            start = str.length + start;
+        }
+        return str.substr(start, length);
     }
 
     /**
@@ -356,8 +378,8 @@ export default class IString {
      * @param stop 一个非负的整数，比要提取的子串的最后一个字符在 stringObject 中的位置多 1。
      * @return 截取的结果字符串
      */
-    static substring(str: string, start: number, stop?: number): string {
-        return '';
+    static substring(str: string, start: number, stop: number = str.length): string {
+        return str.substring(start, stop);
     }
 
     /**
@@ -369,7 +391,12 @@ export default class IString {
      * @return {string} 驼峰化处理后的字符串
      */
     static toCamelCase(source: string): string {
-        return '';
+        if (source.indexOf('-') < 0 && source.indexOf('_') < 0) {
+            return source;
+        }
+        return source.replace(/[-_][^-_]/g, function (match) {
+            return match.charAt(1).toUpperCase();
+        });
     }
 
     /**
@@ -378,16 +405,19 @@ export default class IString {
      * @return
      */
     static toJson(str: string): string {
-        return '';
+        return '"' + str.replace(_CharToReplace, function (a) {
+                let c = _Meta[a];
+                return IString.isString(c) ? c : '\\u' + ('0000' + a.charCodeAt(0).toString(16)).slice(-4);
+            }) + '"';
     }
 
     /**
      * 方法用于把字符串转换为小写。
-     * @param source 目标字符串
+     * @param str 目标字符串
      * @return 一个新的字符串，在其中 stringObject 的所有大写字符全部被转换为了小写字符。
      */
-    static toLowerCase(source: string): string {
-        return '';
+    static toLowerCase(str: string): string {
+        return str.toLowerCase();
     }
 
     /**
@@ -396,7 +426,7 @@ export default class IString {
      * @return
      */
     static toString(str: string): string {
-        return '';
+        return str.toString();
     }
 
     /**
@@ -405,7 +435,7 @@ export default class IString {
      * @return 一个新的字符串，在其中 stringObject 的所有小写字符全部被转换为了大写字符。
      */
     static toUpperCase(str: string): string {
-        return '';
+        return str.toUpperCase();
     }
 
     /**
@@ -414,7 +444,7 @@ export default class IString {
      * @return 清除后的结果
      */
     static trim(str: string): string {
-        return '';
+        return str.replace(/^(\s|\u3000|\xa0|\u00A0)+/, '').replace(/(\s||\u3000|\xa0\u00A0)+$/, '');
     }
 
     /**
@@ -423,7 +453,7 @@ export default class IString {
      * @return
      */
     static trimLeft(str: string): string {
-        return '';
+        return str.replace(/^(\s|\u3000|\xa0\u00A0)+/, '');
     }
 
     /**
@@ -432,7 +462,7 @@ export default class IString {
      * @return
      */
     static trimRight(str: string): string {
-        return '';
+        return str.replace(/(\s|\u3000|\xa0\u00A0)+$/, '');
     }
 
     /**
@@ -440,8 +470,23 @@ export default class IString {
      * @param {Object} source 转换目标
      * @return 参数作为一个字符串返回
      */
-    static valueOf(source: any): string {
-        return '';
+    static valueOf(str: any): string {
+        return str + '';
     }
 
 }
+
+//需要转义的字符  UTF8 TO Ascii
+const _CharToReplace = /[\\\"\x00-\x1f\x7f-\uffff]/g;
+
+//JSON需要转义的对象
+const _Meta = {
+    "\b": '\\b',
+    "\t": '\\t',
+    "\n": '\\n',
+    "\f": '\\f',
+    "\r": '\\r',
+    '"': '\\"',
+    "\\": '\\\\',
+    '\v': '\\u000b'
+};
