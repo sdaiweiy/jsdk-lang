@@ -6,7 +6,7 @@ export default class IStringEscape {
      * 给以下字符前加上“\”进行转义：.*+?^=!:${}()|[]/\
      * @return {String} 转义后的字符串
      */
-    escapeReg(source: string): string {
+    static escapeReg(source: string): string {
         return String(source).replace(new RegExp("([.*+?^=!:\x24{}()|[\\]\/\\\\])", "g"), '\\\x241');
     }
 
@@ -15,7 +15,7 @@ export default class IStringEscape {
      * @param {String} source 目标字符串
      * @return {String} html编码后的字符串
      */
-    escapeHtml(source: string): string {
+    static escapeHtml(source: string): string {
         return '';
     }
 
@@ -24,7 +24,7 @@ export default class IStringEscape {
      * @param {String} source 目标字符串
      * @return {String} html解码后的字符串
      */
-    unEscapeHtml(source: string): string {
+    static unEscapeHtml(source: string): string {
         return '';
     }
 
@@ -33,7 +33,7 @@ export default class IStringEscape {
      * @param {String} source 目标字符串
      * @return {String} html解码后的字符串
      */
-    escapeJavaScript(source: string): string {
+    static escapeJavaScript(source: string): string {
         return '';
     }
 
@@ -42,7 +42,7 @@ export default class IStringEscape {
      * @param {String} source 目标字符串
      * @return {String} html解码后的字符串
      */
-    unEscapeJavaScript(source: string): string {
+    static unEscapeJavaScript(source: string): string {
         return '';
     }
 }
