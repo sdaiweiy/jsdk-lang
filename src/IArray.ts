@@ -26,13 +26,14 @@ export default class IArray {
      * @param array 给定的数组
      * @param source ...  需要合并的数组
      */
-    static addAll<T>(array: T[], ...source: T[][]): void {
-        for (let i = 1, len = source.length; i < len; i++) {
+    static addAll<T>(array: T[], ...source: T[][]): T[] {
+        for (let i = 0, len = source.length; i < len; i++) {
             let sub = source[i];
             for (let j = 0, len1 = sub.length; j < len1; j++) {
                 array.push(sub[j]);
             }
         }
+        return array;
     }
 
     /***
@@ -229,10 +230,11 @@ export default class IArray {
     /**
      * 对数组元素进行排序，并返回当前数组
      * @param array 给定的数组
+     * @optional
      * @param fn 排序算法,具体算法内容参照JS原生数组sort的用法
      * @return  返回排序后的数组。原数组已经被排序后的数组代替。
      */
-    static sort<T>(array: T[], fn: (a: T, b: T) => number): T[] {
+    static sort<T>(array: T[], fn?: (a: T, b: T) => number): T[] {
         return fn ? array.sort(fn) : array.sort(); //不判定的话ie8以下会有问题
     }
 
@@ -244,7 +246,7 @@ export default class IArray {
      * @param endIndex 结束索引,可选参数,默认为数组长度
      * @return  提取元素组成的新数组
      */
-    static subArray<T>(array: T[], startIndex: number, endIndex?: number): T[] {
+    static subArray<T>(array: T[], startIndex: number, endIndex: number = array.length): T[] {
         if (this.indexOutOfBounds(array, startIndex) || this.indexOutOfBounds(array, endIndex)) {
             throw new RangeError("startIndex or endIndex out of bounds");
         }
