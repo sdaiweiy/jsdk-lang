@@ -3,6 +3,7 @@ import IDate from './IDate';
 import IString from './IString';
 import IBoolean from "./IBoolean";
 import IFunction from "./IFunction";
+import INumber from "./INumber";
 
 /**
  * 对象操作对应的工具类接口定义
@@ -186,18 +187,20 @@ export default class IObject {
      * @return 序列化后的字符串 如果返回''字符串,则序列化失败
      */
     static toJson(object: any): any {
-        if (JSON && JSON.stringify) {
-            return JSON.stringify(object);
-        }
+        /*        if (JSON && JSON.stringify) {
+         return JSON.stringify(object);
+         }*/
 
         if (this.isUndefined(object) || IFunction.isFunction(object)) {
-            return "null";
+            return null;
         } else if (IBoolean.isBoolean(object)) {
             return IBoolean.toJson(object);
         } else if (IString.isString(object)) {
             return IString.toJson(object);
         } else if (IArray.isArray(object)) {
             return IArray.toJson(object);
+        } else if (INumber.isNumber(object)) {
+            return INumber.toJson(object);
         } else if (IDate.isDate(object)) {
             return IDate.toJson(object);
         } else if (IObject.isObject(object)) {
@@ -281,9 +284,9 @@ const deepEquals = function (a, b, aStack: any[] = [], bStack: any[] = []) {
         case '[object Date]':
         case '[object Boolean]':
             return +a === +b;
-        case '[object Symbol]':
-            let symbolProp = Symbol.prototype;
-            return symbolProp.valueOf.call(a) === symbolProp.valueOf.call(b);
+        /*        case '[object Symbol]':
+         let symbolProp = Symbol.prototype;
+         return symbolProp.valueOf.call(a) === symbolProp.valueOf.call(b);*/
     }
     let areArrays = className === '[object Array]';
     //不是数组情况
