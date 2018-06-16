@@ -96,7 +96,7 @@ describe("indexOutOfBounds function", () => {
     let myFish = ["angel", "clown", "mandarin", "surgeon"];
 
     it('basic', function () {
-        expect(IArray.indexOutOfBounds(myFish, -1)).to.be.false;
+        expect(IArray.indexOutOfBounds(myFish, -1)).to.be.true;
         expect(IArray.indexOutOfBounds(myFish, 3)).to.be.false;
         expect(IArray.indexOutOfBounds(myFish, 5)).to.be.true;
     });
@@ -253,9 +253,9 @@ describe("removeRange function", () => {
         let myFish = ["angel", "clown", "mandarin", "surgeon"];
         let result = IArray.removeRange(myFish, 1, 3);
 
-        expect(result).to.equal(["clown", "mandarin"]);
+        expect(result).to.deep.equal(["clown", "mandarin"]);
         expect(myFish.length).to.equal(2);
-        expect(myFish).to.equal(["angel", "surgeon"]);
+        expect(myFish).to.deep.equal(["angel", "surgeon"]);
     });
 
     it('error index should throw exception ', function () {
@@ -308,21 +308,27 @@ describe("subArray function", () => {
     it('basic', function () {
         let fruits = ['Banana', 'Orange', 'Lemon', 'Apple', 'Mango'];
         let citrus = IArray.subArray(fruits, 1, 3);
-        expect(citrus).to.equal(['Orange', 'Lemon']);
+        expect(citrus).to.deep.equal(['Orange', 'Lemon']);
+
         let citrus1 = IArray.subArray(fruits, 1);
-        expect(citrus1).to.equal(['Orange', 'Lemon', 'Apple', 'Mango']);
+        expect(citrus1).to.deep.equal(['Orange', 'Lemon', 'Apple', 'Mango']);
     });
 });
 
 describe("toJson function", () => {
-    let alpha = ['a', 'b', 1, true, undefined];
+    let alpha = ['a', 'b', 1, true];
+    let alpha1 = ['a', 'b', 1, true, void 0];
 
     it('basic', function () {
-        console.log(IArray.toJson(alpha));
-        expect(IArray.toJson(alpha)).to.equal("[]");
+        expect(IArray.toJson(alpha)).to.equal('["a","b",1,true]');
+        expect(IArray.toJson(alpha1)).to.equal('["a","b",1,true]');
     });
 });
 
 describe("toString function", () => {
+    let alpha = ['a', 'b', 1, true];
 
+    it('basic', function () {
+        expect(IArray.toString(alpha)).to.equal('a,b,1,true');
+    });
 });
