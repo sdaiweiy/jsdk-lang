@@ -243,14 +243,14 @@ export default class IArray {
      * @param array 源数组
      * @param startIndex 起始索引
      * @optional
-     * @param endIndex 结束索引,可选参数,默认为数组长度
+     * @param endIndex 结束索引(不包括),可选参数,默认为数组长度
      * @return  提取元素组成的新数组
      */
     static subArray<T>(array: T[], startIndex: number, endIndex: number = array.length): T[] {
-        if (this.indexOutOfBounds(array, startIndex) || this.indexOutOfBounds(array, endIndex)) {
+        if (this.indexOutOfBounds(array, startIndex) || this.indexOutOfBounds(array, endIndex - 1)) {
             throw new RangeError("startIndex or endIndex out of bounds");
         }
-        return Array.prototype.slice.call(array, startIndex, endIndex ? endIndex : array.length);
+        return Array.prototype.slice.call(array, startIndex, endIndex);
     }
 
     /***
@@ -261,7 +261,10 @@ export default class IArray {
     static toJson<T>(array: T[]): string {
         let result = ["[", ""], len = array.length, i;
         for (i = 0; i < len; i += 1) {
-            result.push(IObject.toJson(array[i]), ',');
+            let val = IObject.toJson(array[i]);
+            if (val) { //处理val为undefined 或 null的问题
+                result.push(val, ',');
+            }
         }
         result[result.length - 1] = ']';
         return result.join("");
