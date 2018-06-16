@@ -60,9 +60,13 @@ gulp.task("bundle-source-es3", function () {
 });
 
 gulp.task("document", function () {
-    return gulp.src(["**/*.ts"])
+    return gulp.src(["./src/**/*.ts"])
         .pipe(typedoc({
-            out: __dirname + "/documentation",
-            name: "jsdk-lang-api"
+            module: 'commonjs',
+            target: 'es6',
+
+            out: "./documentation",
+            name: "jsdk-lang-api",
+            ignoreCompilerErrors: true
         }));
 });
