@@ -25,8 +25,8 @@ export default class IBoolean {
      * @param object
      * @return true:是  false:否
      */
-    static isFalse(object: object): boolean {
-        return !object === false;
+    static isFalse(object: any): boolean {
+        return !object;
     }
 
     /***
@@ -42,8 +42,8 @@ export default class IBoolean {
      * @param object
      * @return true:是  false:否
      */
-    static isTrue(object: object): boolean {
-        return !!object === true;
+    static isTrue(object: any): boolean {
+        return !!object;
     }
 
     /***
@@ -51,7 +51,7 @@ export default class IBoolean {
      * @param object 给定的对象
      * @return true/false
      */
-    static valueOf(object: object): boolean {
+    static valueOf(object: any): boolean {
         return !!object;
     }
 
@@ -61,7 +61,7 @@ export default class IBoolean {
      * @return 转换后的结果
      */
     static toJson(object: boolean): boolean {
-        return object.valueOf();
+        return this.valueOf(object);
     }
 
     /***
@@ -69,7 +69,7 @@ export default class IBoolean {
      * @param object 给定的对象
      * @return "true"/"false"
      */
-    static toString(object: object): string {
+    static toString(object: boolean): string {
         return Boolean.prototype.toString.call(object);
     }
 
