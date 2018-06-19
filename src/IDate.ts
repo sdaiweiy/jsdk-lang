@@ -81,28 +81,27 @@ export default class IDate {
             pattern = pattern.replace(patternPart, result);
         }
 
-        let pad = IString.padLeft,
-            year = date.getFullYear(),
+        let year = date.getFullYear(),
             month = date.getMonth() + 1,
             date2 = date.getDate(),
             hours = date.getHours(),
             minutes = date.getMinutes(),
             seconds = date.getSeconds();
 
-        replacer(/yyyy/g, pad(year + "", 4, "0"));
-        replacer(/yy/g, pad(parseInt(year.toString().slice(2), 10) + "", 2, "0"));
-        replacer(/MM/g, pad(month + "", 2, "0"));
+        replacer(/yyyy/g, IString.padLeft(year + "", 4, "0"));
+        replacer(/yy/g, IString.padLeft(parseInt(year.toString().slice(2), 10) + "", 2, "0"));
+        replacer(/MM/g, IString.padLeft(month + "", 2, "0"));
         replacer(/M/g, month);
-        replacer(/dd/g, pad(date2 + "", 2, "0"));
+        replacer(/dd/g, IString.padLeft(date2 + "", 2, "0"));
         replacer(/d/g, date2);
 
-        replacer(/HH/g, pad(hours + "", 2, "0"));
+        replacer(/HH/g, IString.padLeft(hours + "", 2, "0"));
         replacer(/H/g, hours);
-        replacer(/hh/g, pad(hours % 12 + "", 2, "0"));
+        replacer(/hh/g, IString.padLeft(hours % 12 + "", 2, "0"));
         replacer(/h/g, hours % 12);
-        replacer(/mm/g, pad(minutes + "", 2, "0"));
+        replacer(/mm/g, IString.padLeft(minutes + "", 2, "0"));
         replacer(/m/g, minutes);
-        replacer(/ss/g, pad(seconds + "", 2, "0"));
+        replacer(/ss/g, IString.padLeft(seconds + "", 2, "0"));
         replacer(/s/g, seconds);
 
         return pattern;
@@ -393,12 +392,12 @@ export default class IDate {
     }
 
     /**
-     * 等同于toJson方法,将数组转为字符串
+     * 等同于原生toString方法,将数组转为字符串
      * @param date 目标日期
      * @return
      */
     static toString(date: Date): string {
-        return this.toJson(date);
+        return Date.prototype.toString.call(date);
     }
 
 }
