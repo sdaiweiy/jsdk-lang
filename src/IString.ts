@@ -222,7 +222,7 @@ export default class IString {
 
         let paddingString = new String(),
             len = (size - str.length) / padStr.length,
-            gap = size - (len * padStr.length);
+            gap = size - (len * padStr.length) - str.length;
 
         for (let i = 0; i < len; i++) {
             paddingString += padStr;
@@ -264,7 +264,7 @@ export default class IString {
 
         let paddingString = new String(),
             len = (size - str.length) / padStr.length,
-            gap = size - (len * padStr.length);
+            gap = size - (len * padStr.length) - str.length;
 
         for (let i = 0; i < len; i++) {
             paddingString += padStr;
@@ -406,9 +406,9 @@ export default class IString {
      */
     static toJson(str: string): string {
         return '"' + str.replace(_CharToReplace, function (a) {
-                let c = _Meta[a];
-                return IString.isString(c) ? c : '\\u' + ('0000' + a.charCodeAt(0).toString(16)).slice(-4);
-            }) + '"';
+            let c = _Meta[a];
+            return IString.isString(c) ? c : '\\u' + ('0000' + a.charCodeAt(0).toString(16)).slice(-4);
+        }) + '"';
     }
 
     /**
