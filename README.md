@@ -5,3 +5,4 @@ javascript lang utils
 
 #ES5或ES3版本使用方法
 Jsdk.Lang.IArray.add(.....);
+
