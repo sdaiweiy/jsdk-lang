@@ -251,11 +251,20 @@ describe("isLeapYear function", () => {
     });
 });
 
-/*describe("now function", () => {
-    it("basic", () => {
 
+describe("minus function", () => {
+    it("basic", () => {
+        let d1 = new Date(2015, 0, 3, 12, 34, 12, 128);
+        let d2 = new Date(2015, 0, 3, 13, 35, 13, 128);
+
+        expect(IDate.minus(d1, d2, IDate.MILLISECOND)).to.be.equal(3661000);
+        expect(IDate.minus(d1, d2, IDate.SECOND)).to.be.equal(3661);
+        expect(IDate.minus(d1, d2, IDate.MINUTE)).to.be.equal(61);
+        expect(IDate.minus(d1, d2, IDate.HOUR)).to.be.equal(1);
+        expect(IDate.minus(d2, d1, IDate.HOUR)).to.be.equal(-1);
     });
-});*/
+});
+
 
 describe("parse function", () => {
     it("basic", () => {

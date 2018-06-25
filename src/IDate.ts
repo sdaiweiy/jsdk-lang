@@ -6,6 +6,14 @@ import INumber from "./INumber";
  */
 export default class IDate {
 
+    static YEAR = 0;
+    static MONTH = 1;
+    static DAY = 2;
+    static HOUR = 3;
+    static MINUTE = 4;
+    static SECOND = 5;
+    static MILLISECOND = 6;
+
     /**
      * 判断给定时间是否在某个时间之后
      * @param date 目标日期
@@ -264,6 +272,27 @@ export default class IDate {
             return <number>value % 4 == 0 && (<number>value % 100 != 0 || <number>value % 400 == 0);
         }
         return false;
+    }
+
+    /**
+     * 比较startTime和EndTime之间的差,根据给定的不同的diffType返回不同的值
+     * @example
+     *  let d1 = new Date(2015, 0, 3, 12, 34, 12, 128);
+     *  let d2 = new Date(2015, 0, 3, 13, 35, 13, 128);
+     *  IDate.minus(d2, d1, IDate.HOUR)  =>  -1
+     * @param startTime 开始时间
+     * @param endTime 结束时间
+     * @param diffType 比较方式 IDate.DAY(日期) | IDate.HOUR(小时) | IDate.MINUTE(分钟) | IDate.SECOND(秒) | IDate.MILLISECOND(毫秒)
+     * @return 根据给定的diffType相减的差值
+     */
+    static minus(startTime: Date, endTime: Date, diffType: number): number {
+        let diff = endTime.getTime() - startTime.getTime();
+        let divisions = [24 * 3600 * 1000, 3600 * 1000, 60000, 1000, 1];
+
+        if (diffType < 2 || diffType > 6) {
+            throw new RangeError("diffType value must between 2 and 6");
+        }
+        return INumber.parseInt(diff / divisions[diffType - 2]);
     }
 
     /***
