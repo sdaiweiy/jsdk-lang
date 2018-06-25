@@ -368,6 +368,14 @@ this.Jsdk.Lang = (function (exports) {
             }
             return false;
         };
+        IDate.minus = function (startTime, endTime, diffType) {
+            var diff = endTime.getTime() - startTime.getTime();
+            var divisions = [24 * 3600 * 1000, 3600 * 1000, 60000, 1000, 1];
+            if (diffType < 2 || diffType > 6) {
+                throw new RangeError("diffType value must between 2 and 6");
+            }
+            return INumber.parseInt(diff / divisions[diffType - 2]);
+        };
         IDate.now = function () {
             return new Date().getTime();
         };
@@ -424,6 +432,13 @@ this.Jsdk.Lang = (function (exports) {
         IDate.toString = function (date) {
             return Date.prototype.toString.call(date);
         };
+        IDate.YEAR = 0;
+        IDate.MONTH = 1;
+        IDate.DAY = 2;
+        IDate.HOUR = 3;
+        IDate.MINUTE = 4;
+        IDate.SECOND = 5;
+        IDate.MILLISECOND = 6;
         return IDate;
     }());
     var isLessIE7 = false;
