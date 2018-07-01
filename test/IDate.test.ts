@@ -268,16 +268,7 @@ describe("minus function", () => {
 
 describe("parse function", () => {
     it("basic", () => {
-        let date = IDate.parse("98/6/25");
-        expect(date.getFullYear()).to.be.equal(1998);
-        expect(date.getMonth()).to.be.equal(5);
-        expect(date.getDate()).to.be.equal(25);
-        date = IDate.parse("98/10/25");
-        expect(date.getFullYear()).to.be.equal(1998);
-        expect(date.getMonth()).to.be.equal(9);
-        expect(date.getDate()).to.be.equal(25);
-
-        date = IDate.parse("2007-10-23");
+        let date = IDate.parse("2007-10-23");
         expect(date.getFullYear()).to.be.equal(2007);
         expect(date.getMonth()).to.be.equal(9);
         expect(date.getDate()).to.be.equal(23);
@@ -287,7 +278,16 @@ describe("parse function", () => {
         expect(date.getMonth()).to.be.equal(10);
         expect(date.getDate()).to.be.equal(25);
 
-        date = IDate.parse("2007-10-23 12:23:15");
+        date = IDate.parse("1998/6/25", "yyyy/MM/dd");
+        expect(date.getFullYear()).to.be.equal(1998);
+        expect(date.getMonth()).to.be.equal(5);
+        expect(date.getDate()).to.be.equal(25);
+        date = IDate.parse("98/10/25", "yyyy/MM/dd");
+        expect(date.getFullYear()).to.be.equal(1998);
+        expect(date.getMonth()).to.be.equal(9);
+        expect(date.getDate()).to.be.equal(25);
+
+        date = IDate.parse("2007-10-23 12:23:15", "yyyy-MM-dd HH:mm:ss");
         expect(date.getFullYear()).to.be.equal(2007);
         expect(date.getMonth()).to.be.equal(9);
         expect(date.getDate()).to.be.equal(23);

@@ -307,24 +307,25 @@ export default class IDate {
      * 解析字符串的文本，生成 Date
      * @example
      * Dev.Date.parse('2016-08-11'); // Thu Aug 11 2016 00:00:00 GMT+0800
-     * Dev.Date.parse('2016-08-11 13:28:43') // Thu Aug 11 2016 13:28:43 GMT+0800
-     * @param source 日期字符串
+     * Dev.Date.parse('2016-08-11 13:28:43','yyyy-MM-dd HH:mm:ss') // Thu Aug 11 2016 13:28:43 GMT+0800
+     * @param str 日期字符串
+     * @param pattern 参考format的说明
      * @return 字符串对应的日期
      */
-    static parse(source: string): Date {
-        let reg = new RegExp("^\\d+(\\-|\\/)\\d+(\\-|\\/)\\d+\x24");
-        if ('string' == typeof source) {
-            if (reg.test(source) || isNaN(Date.parse(source))) {
-                let d = source.split(/ |T/),
-                    d1 = d.length > 1 ? <any[]>d[1].split(/[^\d]/) : [0, 0, 0],
-                    d0 = <any[]>d[0].split(/[^\d]/);
+    static parse(str: string, pattern: string = "yyyy-MM-dd"): Date {
+        let obj = {y: 0, M: 1, d: 0, H: 0, h: 0, m: 0, s: 0, S: 0};
+        pattern.replace(/([^yMdHmsS]*?)(([yMdHmsS])\3*)([^yMdHmsS]*?)/g, function (m, $1, $2, $3, $4, idx, old) {
+            str = str.replace(new RegExp($1 + '(\\d{1,' + $2.length + '})' + $4), function (_m, _$1) {
+                obj[$3] = parseInt(_$1);
+                return '';
+            });
+            return '';
+        });
 
-                return new Date(d0[0] - 0, d0[1] - 1, d0[2] - 0, d1[0] - 0, d1[1] - 0, d1[2] - 0);
-            } else {
-                return new Date(source);
-            }
-        }
-        return new Date();
+        obj.M--; // 月份是从0开始的，所以要减去1
+        let date = new Date(obj.y, obj.M, obj.d, obj.H, obj.m, obj.s);
+        if (obj.S !== 0) date.setMilliseconds(obj.S); // 如果设置了毫秒
+        return date;
     }
 
     /**

@@ -1,5 +1,5 @@
 /**
- * jsdk-lang v.0.0.4 - javascript sdk lang utils
+ * jsdk-lang v.0.0.5 - javascript sdk lang utils
  * Copyright (c) 2018 [object Object]
  * MIT
  * https://github.com/sdaiweiy/jsdk-lang
@@ -379,18 +379,21 @@ this.Jsdk.Lang = (function (exports) {
         IDate.now = function () {
             return new Date().getTime();
         };
-        IDate.parse = function (source) {
-            var reg = new RegExp("^\\d+(\\-|\\/)\\d+(\\-|\\/)\\d+\x24");
-            if ('string' == typeof source) {
-                if (reg.test(source) || isNaN(Date.parse(source))) {
-                    var d = source.split(/ |T/), d1 = d.length > 1 ? d[1].split(/[^\d]/) : [0, 0, 0], d0 = d[0].split(/[^\d]/);
-                    return new Date(d0[0] - 0, d0[1] - 1, d0[2] - 0, d1[0] - 0, d1[1] - 0, d1[2] - 0);
-                }
-                else {
-                    return new Date(source);
-                }
-            }
-            return new Date();
+        IDate.parse = function (str, pattern) {
+            if (pattern === void 0) { pattern = "yyyy-MM-dd"; }
+            var obj = { y: 0, M: 1, d: 0, H: 0, h: 0, m: 0, s: 0, S: 0 };
+            pattern.replace(/([^yMdHmsS]*?)(([yMdHmsS])\3*)([^yMdHmsS]*?)/g, function (m, $1, $2, $3, $4, idx, old) {
+                str = str.replace(new RegExp($1 + '(\\d{1,' + $2.length + '})' + $4), function (_m, _$1) {
+                    obj[$3] = parseInt(_$1);
+                    return '';
+                });
+                return '';
+            });
+            obj.M--;
+            var date = new Date(obj.y, obj.M, obj.d, obj.H, obj.m, obj.s);
+            if (obj.S !== 0)
+                date.setMilliseconds(obj.S);
+            return date;
         };
         IDate.setDay = function (date, day) {
             date.setDate(day);
