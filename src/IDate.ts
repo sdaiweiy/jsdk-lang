@@ -115,6 +115,37 @@ export default class IDate {
         return pattern;
     }
 
+
+    /**
+     * 根据给定的配置将一个日期格式化成友好格式，比如，1分钟以内的返回“刚刚”，1小时内返回"一小时前"等
+     * @param {Object} date 需要格式化的时间
+     * @param {Object} friendlyPattern 给定的格式 注意：以key,value的形式从<b>小到大</b>排列，如果都不满足条件则value为-1
+     *                  默认值为{"刚刚": 60,一小时前": 3600,"HH:mm": 86400,"yyyy年MM月dd日": -1}
+     *                  说明:1分钟以内，返回刚刚。1小时内,返回一小时前,一天内返回HH:mm格式，除以上情况(-1)，返回yyyy年MM月dd日格式。
+     * @return {String} 按照给定的格式返回友好的格式
+     */
+    static formatToFriendly(date: Date, friendlyPattern?: { [key: string]: number }): string {
+        if (!friendlyPattern) {
+            friendlyPattern = {
+                "刚刚": 60,
+                "一小时前": 3600,
+                "HH:mm": 86400,
+                "yyyy年MM月dd日": -1
+            };
+        }
+
+        let now = new Date();
+        for (let pattern in friendlyPattern) {
+            let value = friendlyPattern[pattern];
+            if (-1 == value) {
+                return IDate.format(date, pattern);
+            }
+            if ((now.getTime() - date.getTime()) < value * 1000) {
+                return IDate.format(date, pattern);
+            }
+        }
+    }
+
     /**
      * 返回月份的某一天
      * @param date 目标日期
@@ -306,8 +337,8 @@ export default class IDate {
     /**
      * 解析字符串的文本，生成 Date
      * @example
-     * Dev.Date.parse('2016-08-11'); // Thu Aug 11 2016 00:00:00 GMT+0800
-     * Dev.Date.parse('2016-08-11 13:28:43','yyyy-MM-dd HH:mm:ss') // Thu Aug 11 2016 13:28:43 GMT+0800
+     * IDate.parse('2016-08-11'); // Thu Aug 11 2016 00:00:00 GMT+0800
+     * IDate.parse('2016-08-11 13:28:43','yyyy-MM-dd HH:mm:ss') // Thu Aug 11 2016 13:28:43 GMT+0800
      * @param str 日期字符串
      * @param pattern 参考format的说明
      * @return 字符串对应的日期

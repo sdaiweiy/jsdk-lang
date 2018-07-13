@@ -127,6 +127,41 @@ describe("format function", () => {
     });
 });
 
+describe("formatDateToFriendly function", () => {
+    it("basic", () => {
+        let date = new Date();
+        expect(IDate.formatToFriendly(date)).to.be.equal("刚刚");
+
+        IDate.setMinutes(date, IDate.getMinutes(date) - 30);
+        expect(IDate.formatToFriendly(date)).to.be.equal("一小时前");
+
+        IDate.setHours(date, IDate.getHours(date) - 5);
+        expect(IDate.formatToFriendly(date)).to.be.equal(IDate.format(date, "HH:mm"));
+
+        IDate.setDay(date, IDate.getDay(date) - 2);
+        expect(IDate.formatToFriendly(date)).to.be.equal(IDate.format(date, "yyyy年MM月dd日"));
+    });
+
+    it("custom pattern", () => {
+        let friendlyPattern = {
+            "HH:mm:ss": 86400,
+            "yyyy年MM月dd日": -1
+        };
+
+        let date = new Date();
+        expect(IDate.formatToFriendly(date, friendlyPattern)).to.be.equal(IDate.format(date, "HH:mm:ss"));
+
+        IDate.setMinutes(date, IDate.getMinutes(date) - 30);
+        expect(IDate.formatToFriendly(date, friendlyPattern)).to.be.equal(IDate.format(date, "HH:mm:ss"));
+
+        IDate.setHours(date, IDate.getHours(date) - 5);
+        expect(IDate.formatToFriendly(date, friendlyPattern)).to.be.equal(IDate.format(date, "HH:mm:ss"));
+
+        IDate.setDay(date, IDate.getDay(date) - 2);
+        expect(IDate.formatToFriendly(date, friendlyPattern)).to.be.equal(IDate.format(date, "yyyy年MM月dd日"));
+    });
+});
+
 describe("getDay function", () => {
     it("basic", () => {
         let date = new Date(2010, 8, 3);
