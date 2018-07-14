@@ -1,5 +1,5 @@
 /**
- * jsdk-lang v.0.0.5 - javascript sdk lang utils
+ * jsdk-lang v.0.0.6 - javascript sdk lang utils
  * Copyright (c) 2018 [object Object]
  * MIT
  * https://github.com/sdaiweiy/jsdk-lang
@@ -309,6 +309,26 @@ this.Jsdk.Lang = (function (exports) {
             replacer(/ss/g, IString.padLeft(seconds + "", 2, "0"));
             replacer(/s/g, seconds);
             return pattern;
+        };
+        IDate.formatToFriendly = function (date, friendlyPattern) {
+            if (!friendlyPattern) {
+                friendlyPattern = {
+                    "刚刚": 60,
+                    "一小时前": 3600,
+                    "HH:mm": 86400,
+                    "yyyy年MM月dd日": -1
+                };
+            }
+            var now = new Date();
+            for (var pattern in friendlyPattern) {
+                var value = friendlyPattern[pattern];
+                if (-1 == value) {
+                    return IDate.format(date, pattern);
+                }
+                if ((now.getTime() - date.getTime()) < value * 1000) {
+                    return IDate.format(date, pattern);
+                }
+            }
         };
         IDate.getDay = function (date) {
             return date.getDate();
@@ -891,10 +911,28 @@ this.Jsdk.Lang = (function (exports) {
             return String(source).replace(new RegExp("([.*+?^=!:\x24{}()|[\\]\/\\\\])", "g"), '\\\x241');
         };
         IStringEscape.escapeHtml = function (source) {
-            return '';
+            var s = "";
+            if (source.length == 0)
+                return "";
+            s = source.replace(/&/g, "&amp;");
+            s = s.replace(/</g, "&lt;");
+            s = s.replace(/>/g, "&gt;");
+            s = s.replace(/ /g, "&nbsp;");
+            s = s.replace(/\'/g, "&#39;");
+            s = s.replace(/\"/g, "&quot;");
+            return s;
         };
         IStringEscape.unEscapeHtml = function (source) {
-            return '';
+            var s = "";
+            if (source.length == 0)
+                return "";
+            s = source.replace(/&amp;/g, "&");
+            s = s.replace(/&lt;/g, "<");
+            s = s.replace(/&gt;/g, ">");
+            s = s.replace(/&nbsp;/g, " ");
+            s = s.replace(/&#39;/g, "\'");
+            s = s.replace(/&quot;/g, "\"");
+            return s;
         };
         IStringEscape.escapeJavaScript = function (source) {
             return '';
