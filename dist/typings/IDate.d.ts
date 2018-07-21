@@ -1,0 +1,46 @@
+export default class IDate {
+    static YEAR: number;
+    static MONTH: number;
+    static DAY: number;
+    static HOUR: number;
+    static MINUTE: number;
+    static SECOND: number;
+    static MILLISECOND: number;
+    static after(date: Date, when: Date): boolean;
+    static before(date: Date, when: Date): boolean;
+    static between(date: Date, start: Date, end: Date): boolean;
+    static compareTo(date1: Date, date2: Date): number;
+    static format(date: Date, pattern: string): string;
+    static formatToFriendly(date: Date, friendlyPattern?: {
+        [key: string]: number;
+    }): string;
+    static getDay(date: Date): number;
+    static getDayOfWeek(date: Date): number;
+    static getDayOfWeekInMonth(date: Date): number;
+    static getDayOfYear(date: Date): number;
+    static getHours(date: Date): number;
+    static getMilliseconds(date: Date): number;
+    static getMinutes(date: Date): number;
+    static getMonth(date: Date): number;
+    static getQuarter(date: any): number;
+    static getSeconds(date: Date): number;
+    static getTime(date: Date): number;
+    static getWeekOfMonth(date: Date): number;
+    static getWeekOfYear(date: Date): number;
+    static getYear(date: Date): number;
+    static isDate(date: any): boolean;
+    static isLeapYear(value: number | Date): boolean;
+    static minus(startTime: Date, endTime: Date, diffType: number): number;
+    static now(): number;
+    static parse(str: string, pattern?: string): Date;
+    static setDay(date: Date, day: number): void;
+    static setHours(date: Date, hour: number): void;
+    static setMilliseconds(date: Date, millisec: number): void;
+    static setMinutes(date: Date, min: number): void;
+    static setMonth(date: Date, month: number): void;
+    static setSeconds(date: Date, sec: number): void;
+    static setYear(date: Date, year: number): void;
+    static setTime(date: Date, millisec: number): void;
+    static toJson(date: Date): string;
+    static toString(date: Date): string;
+}

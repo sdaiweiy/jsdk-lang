@@ -1,11 +1,12 @@
 {
   "compilerOptions": {
-/*    "target": "es6",*/
+    "baseUrl": ".",
+    "target": "es6",
     "noImplicitAny": false,
     "removeComments": true,
     "noUnusedLocals": true,
-    "sourceMap": true,
-    "declaration": true
+    "declaration": true,
+    "declarationDir": "./dist/typings"
   },
   "include": [
     "./src/**/*.ts"

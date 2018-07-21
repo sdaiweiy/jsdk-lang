@@ -1,0 +1,34 @@
+export default class IString {
+    static charAt(str: string, index: number): string;
+    static contains(str: string, sbustr: string): boolean;
+    static endWith(source: string, suffix: string): boolean;
+    static format(str: string, context: object): string;
+    static indexOf(str: string, substr: string, index?: number): number;
+    static isBlank(str: string): boolean;
+    static isEmpty(str: string): boolean;
+    static isNotBlank(str: string): boolean;
+    static isNotEmpty(str: string): boolean;
+    static isNotNullOrEmpty(str: string): boolean;
+    static isNullOrEmpty(str: string): boolean;
+    static isString(str: any): boolean;
+    static lastIndexOf(str: string, substr: string, index?: number): number;
+    static padLeft(str: string, size: number, padStr?: string): string | null;
+    static padRight(str: string, size: number, padStr?: string): string | null;
+    static replace(str: string, rule: string | RegExp, replacement: string): string;
+    static replaceFirst(str: string, rule: string | RegExp, replacement: string): string;
+    static replaceAll(str: string, findText: string, replaceText: string): string;
+    static split(str: string, separator: string): string[];
+    static startWith(source: string, prefix: string): boolean;
+    static stripHTML(source: string): string;
+    static substr(str: string, start: number, length?: number): string;
+    static substring(str: string, start: number, stop?: number): string;
+    static toCamelCase(source: string): string;
+    static toJson(str: string): string;
+    static toLowerCase(str: string): string;
+    static toString(str: string): string;
+    static toUpperCase(str: string): string;
+    static trim(str: string): string;
+    static trimLeft(str: string): string;
+    static trimRight(str: string): string;
+    static valueOf(str: any): string;
+}

@@ -1,11 +1,11 @@
 /**
- * jsdk-lang v.0.0.6 - javascript sdk lang utils
+ * jsdk-lang v.0.0.8 - javascript sdk lang utils
  * Copyright (c) 2018 [object Object]
  * MIT
  * https://github.com/sdaiweiy/jsdk-lang
  */
 /**
- * jsdk-lang v.0.0.6 - javascript sdk lang utils
+ * jsdk-lang v.0.0.8 - javascript sdk lang utils
  * Copyright (c) 2018 [object Object]
  * MIT
  * https://github.com/sdaiweiy/jsdk-lang
@@ -847,7 +847,7 @@ this.Jsdk.Lang = (function (exports) {
         };
         IArray.indexOf = function (array, item, index) {
             if (index === void 0) { index = 0; }
-            for (var i = index, length = array.length; i < length; i++) {
+            for (var i = index, length_1 = array.length; i < length_1; i++) {
                 if (IObject.equals(array[i], item)) {
                     return i;
                 }

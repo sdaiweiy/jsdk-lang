@@ -1,37 +1,45 @@
 let gulp = require("gulp"),
-    tsc = require("gulp-typescript"),
     typedoc = require("gulp-typedoc"),
     rollup = require('rollup'),
-    uglify = require("gulp-uglify"),
+    ts = require('gulp-typescript');
+uglify = require("gulp-uglify"),
     rename = require('gulp-rename'),
     header = require("gulp-header"),
     runSequence = require("run-sequence"),
-    rollupTypescript = require('rollup-plugin-typescript');
+    rollupTypescript = require('rollup-plugin-typescript2');
 
 
-//打包ts版本的代码,按模块分离文件
+//打包es6版本的代码
 gulp.task("build-source", function () {
-    let tsProject = tsc.createProject('./tsconfig.json', {target: "es6"});
-    return tsProject.src().pipe(tsProject()).pipe(gulp.dest("./dist"));
-});
-
-//打包es6版本的代码,单文件供浏览器直接访问
-gulp.task("bundled-source-es5", function () {
     return rollup.rollup({
         input: './src/index.ts',
         plugins: [
             rollupTypescript({
-                tsconfig: {
-                    compilerOptions: {
-                        target: "es5"
-                    }
-                },
-                typescript: require('typescript')
+                tsconfig: "./tsconfig.json",
+                useTsconfigDeclarationDir: true
             })
         ]
     }).then(bundle => {
         return bundle.write({
-            file: './bundled/jsdk.lang.es5.js',
+            file: './dist/jsdk.lang.cjs.js',
+            format: 'cjs'
+        });
+    });
+});
+
+gulp.task("dist-source-es5", function () {
+    return rollup.rollup({
+        input: './src/index.ts',
+        plugins: [
+            rollupTypescript({
+                tsconfig: "./tsconfig.json",
+                useTsconfigDeclarationDir: false,
+                tsconfigOverride: {compilerOptions: {target: "es5", declaration: false}},
+            })
+        ]
+    }).then(bundle => {
+        return bundle.write({
+            file: './dist/jsdk.lang.es5.js',
             format: 'iife',
             name: 'Jsdk.Lang'
         });
@@ -39,22 +47,19 @@ gulp.task("bundled-source-es5", function () {
 });
 
 //打包es3版本的代码,单文件供浏览器直接访问
-gulp.task("bundled-source-es3", function () {
+gulp.task("dist-source-es3", function () {
     return rollup.rollup({
         input: './src/index.ts',
         plugins: [
             rollupTypescript({
-                tsconfig: {
-                    compilerOptions: {
-                        target: "es3"
-                    }
-                },
-                typescript: require('typescript')
+                tsconfig: "./tsconfig.json",
+                useTsconfigDeclarationDir: false,
+                tsconfigOverride: {compilerOptions: {target: "es3", declaration: false}},
             })
         ]
     }).then(bundle => {
         return bundle.write({
-            file: './bundled/jsdk.lang.es3.js',
+            file: './dist/jsdk.lang.es3.js',
             format: 'iife',
             name: 'Jsdk.Lang'
         });
@@ -62,17 +67,17 @@ gulp.task("bundled-source-es3", function () {
 });
 
 gulp.task("compress-es5", function () {
-    return gulp.src("./bundled/jsdk.lang.es5.js")
+    return gulp.src("./dist/jsdk.lang.es5.js")
         .pipe(uglify({}))
         .pipe(rename({suffix: '.min'}))
-        .pipe(gulp.dest("./bundled"))
+        .pipe(gulp.dest("./dist"))
 });
 
 gulp.task("compress-es3", function () {
-    return gulp.src("./bundled/jsdk.lang.es3.js")
+    return gulp.src("./dist/jsdk.lang.es3.js")
         .pipe(uglify({ie8: true}))
         .pipe(rename({suffix: '.min'}))
-        .pipe(gulp.dest("./bundled"))
+        .pipe(gulp.dest("./dist"))
 });
 
 gulp.task("header", function () {
@@ -86,9 +91,9 @@ gulp.task("header", function () {
         " */",
         ""].join("\n");
 
-    return gulp.src(["./bundled/jsdk.lang.es3.js", "./bundled/jsdk.lang.es3.min.js", "./bundled/jsdk.lang.es5.js", "./bundled/jsdk.lang.es5.min.js"])
+    return gulp.src(["./dist/jsdk.lang.es3.js", "./dist/jsdk.lang.es3.min.js", "./dist/jsdk.lang.es5.js", "./dist/jsdk.lang.es5.min.js"])
         .pipe(header(banner, {pkg: pkg}))
-        .pipe(gulp.dest("./bundled"));
+        .pipe(gulp.dest("./dist"));
 });
 
 gulp.task("document", function () {
@@ -102,18 +107,10 @@ gulp.task("document", function () {
         }));
 });
 
-gulp.task('build-es6', function (cb) {
-    runSequence(
-        //"lint",
-        "build-source",
-        //["run-unit-test"],
-        cb);
-});
 
 gulp.task('build-es5', function (cb) {
     runSequence(
-        "build-es6",
-        "bundled-source-es5",
+        "dist-source-es5",
         "compress-es5",
         "header",
         cb);
@@ -121,8 +118,7 @@ gulp.task('build-es5', function (cb) {
 
 gulp.task('build-es3', function (cb) {
     runSequence(
-        "build-es6",
-        "bundled-source-es3",
+        "dist-source-es3",
         "compress-es3",
         "header",
         cb);

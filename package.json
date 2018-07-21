@@ -1,6 +1,6 @@
 {
   "name": "jsdk-lang",
-  "version": "0.0.6",
+  "version": "0.0.8",
   "description": "javascript sdk lang utils",
   "author": {
     "name": "wdai",
@@ -8,8 +8,8 @@
   },
   "license": "MIT",
   "homepage": "https://github.com/sdaiweiy/jsdk-lang",
-  "main": "./dist/index.js",
-  "types": "./dist/index.d.ts",
+  "main": "./dist/jsdk.lang.cjs.js",
+  "types": "./dist/typings/index.d.ts",
   "keywords": [
     "js",
     "framework",
@@ -36,9 +36,10 @@
     "gulp-rename": "^1.3.0",
     "gulp-typedoc": "^2.2.0",
     "gulp-typescript": "^3.2.3",
+    "gulp-uglify": "^3.0.0",
     "mocha": "^5.2.0",
     "rollup": "^0.60.1",
-    "rollup-plugin-typescript": "^0.8.1",
+    "rollup-plugin-typescript2": "^0.16.1",
     "run-sequence": "^2.2.1",
     "ts-node": "^6.1.1",
     "typedoc": "^0.11.1",
