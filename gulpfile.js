@@ -1,8 +1,8 @@
 let gulp = require("gulp"),
     typedoc = require("gulp-typedoc"),
     rollup = require('rollup'),
-    ts = require('gulp-typescript');
-uglify = require("gulp-uglify"),
+    ts = require('gulp-typescript'),
+    uglify = require("gulp-uglify"),
     rename = require('gulp-rename'),
     header = require("gulp-header"),
     runSequence = require("run-sequence"),
