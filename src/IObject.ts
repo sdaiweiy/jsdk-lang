@@ -187,9 +187,9 @@ export default class IObject {
      * @return 序列化后的字符串 如果返回''字符串,则序列化失败
      */
     static toJson(object: any): any {
-        /*        if (JSON && JSON.stringify) {
-         return JSON.stringify(object);
-         }*/
+        if (JSON && JSON.stringify) {
+            return JSON.stringify(object);
+        }
 
         if (this.isUndefined(object) || IFunction.isFunction(object)) {
             return null;
@@ -296,7 +296,7 @@ const deepEquals = function (a, b, aStack: any[] = [], bStack: any[] = []) {
         }
         let aCtor = a.constructor, bCtor = b.constructor;
         if (aCtor !== bCtor && !(IFunction.isFunction(aCtor) && aCtor instanceof aCtor &&
-            IFunction.isFunction(bCtor) && bCtor instanceof bCtor)
+                IFunction.isFunction(bCtor) && bCtor instanceof bCtor)
             && ('constructor' in a && 'constructor' in b)) {
             return false;
         }
