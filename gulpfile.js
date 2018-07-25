@@ -8,25 +8,6 @@ let gulp = require("gulp"),
     runSequence = require("run-sequence"),
     rollupTypescript = require('rollup-plugin-typescript2');
 
-
-//打包es6版本的代码
-gulp.task("build-source", function () {
-    return rollup.rollup({
-        input: './src/index.ts',
-        plugins: [
-            rollupTypescript({
-                tsconfig: "./tsconfig.json",
-                useTsconfigDeclarationDir: true
-            })
-        ]
-    }).then(bundle => {
-        return bundle.write({
-            file: './dist/jsdk.lang.cjs.js',
-            format: 'cjs'
-        });
-    });
-});
-
 gulp.task("dist-source-es5", function () {
     return rollup.rollup({
         input: './src/index.ts',
@@ -107,6 +88,23 @@ gulp.task("document", function () {
         }));
 });
 
+//打包es6版本的代码
+gulp.task("build-cjs", function () {
+    return rollup.rollup({
+        input: './src/index.ts',
+        plugins: [
+            rollupTypescript({
+                tsconfig: "./tsconfig.json",
+                useTsconfigDeclarationDir: true
+            })
+        ]
+    }).then(bundle => {
+        return bundle.write({
+            file: './dist/jsdk.lang.cjs.js',
+            format: 'cjs'
+        });
+    });
+});
 
 gulp.task('build-es5', function (cb) {
     runSequence(
