@@ -525,7 +525,18 @@ class IObject {
         return 'function' == typeof object || !!(object && 'object' == typeof object);
     }
     static isPlain(object) {
+        if (!IObject.isObject(object)) {
+            return false;
+        }
+        if (object.constructor &&
+            !this.hasOwn.call(object, "constructor") &&
+            !this.hasOwn.call(object.constructor.prototype, "isPrototypeOf")) {
+            return false;
+        }
         for (let _name in object) {
+            return false;
+        }
+        if (object.item && typeof object.length == "number") {
             return false;
         }
         return true;
@@ -570,13 +581,12 @@ class IObject {
         return this.deepExtend({}, object);
     }
     static keys(object) {
-        let hasOwn = Object.prototype.hasOwnProperty;
-        if (hasOwn.call(Object, "keys")) {
+        if (this.hasOwn.call(Object, "keys")) {
             return Object.keys(object);
         }
         let keys = [];
         for (let key in object) {
-            if (hasOwn.call(object, key)) {
+            if (this.hasOwn.call(object, key)) {
                 keys.push(key);
             }
         }
@@ -590,7 +600,7 @@ class IObject {
         return values;
     }
     static hasKey(object, key) {
-        return object != null && Object.prototype.hasOwnProperty.call(object, key);
+        return object != null && this.hasOwn.call(object, key);
     }
     static each(object, fn) {
         IArray.each(this.keys(object), function (i, key) {
@@ -598,6 +608,9 @@ class IObject {
         });
     }
     static toJson(object) {
+        if (JSON && JSON.stringify) {
+            return JSON.stringify(object);
+        }
         if (this.isUndefined(object) || IFunction.isFunction(object)) {
             return null;
         }
@@ -645,6 +658,7 @@ class IObject {
         }
     }
 }
+IObject.hasOwn = Object.prototype.hasOwnProperty;
 const deepEquals = function (a, b, aStack = [], bStack = []) {
     if (a === b) {
         return true;

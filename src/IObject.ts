@@ -10,6 +10,8 @@ import INumber from "./INumber";
  */
 export default class IObject {
 
+    private static hasOwn: Function = Object.prototype.hasOwnProperty;
+
     /***
      * 判断给予的对象是否不是空,注意null和Undefined 都返回false
      * @param object 判定对象
@@ -43,9 +45,28 @@ export default class IObject {
      * @return true:是  false:否
      */
     static isPlain(object: any): boolean {
+        if (!IObject.isObject(object)) {
+            return false;
+        }
+
+        //判断new fn()自定义对象的情况
+        //constructor不是继承自原型链的
+        //并且原型中有isPrototypeOf方法才是Object
+        if (object.constructor &&
+            !this.hasOwn.call(object, "constructor") &&
+            !this.hasOwn.call(object.constructor.prototype, "isPrototypeOf")) {
+            return false;
+        }
+
         for (let _name in object) {
             return false;
         }
+
+        // nodelist for ie
+        if (object.item && typeof object.length == "number") {
+            return false;
+        }
+
         return true;
     }
 
@@ -66,7 +87,7 @@ export default class IObject {
      * @param source ... 被拷贝的元素
      * @return 拷贝的新对象
      */
-    static extend(target: object, ...source: object[]): object {
+    static extend(target: object, ...source: object[]): any {
         target = target || {};
 
         for (let i = 0; i < source.length; i++) {
@@ -129,15 +150,13 @@ export default class IObject {
      * @return 属性集合
      */
     static keys(object: object): string[] {
-        let hasOwn = Object.prototype.hasOwnProperty;
-
-        if (hasOwn.call(Object, "keys")) {
+        if (this.hasOwn.call(Object, "keys")) {
             return Object.keys(object);
         }
 
         let keys = [];
         for (let key in object) {
-            if (hasOwn.call(object, key)) {
+            if (this.hasOwn.call(object, key)) {
                 keys.push(key);
             }
         }
@@ -166,7 +185,7 @@ export default class IObject {
      * @return true:包含  false:不包含
      */
     static hasKey(object: object, key: string): boolean {
-        return object != null && Object.prototype.hasOwnProperty.call(object, key);
+        return object != null && this.hasOwn.call(object, key);
     }
 
     /***
@@ -225,7 +244,7 @@ export default class IObject {
      * @param data 需要解析的字符串
      * @return 转换成的JSON对象
      */
-    static parseJson(data: string): object {
+    static parseJson(data: string): any {
         try {
             if (JSON && JSON.parse) {
                 return JSON.parse(data);

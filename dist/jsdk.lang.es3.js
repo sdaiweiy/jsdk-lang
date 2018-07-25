@@ -1,5 +1,5 @@
 /**
- * jsdk-lang v.0.0.9 - javascript sdk lang utils
+ * jsdk-lang v.0.0.10 - javascript sdk lang utils
  * Copyright (c) 2018 [object Object]
  * MIT
  * https://github.com/sdaiweiy/jsdk-lang
@@ -575,7 +575,18 @@ this.Jsdk.Lang = (function (exports) {
             return 'function' == typeof object || !!(object && 'object' == typeof object);
         };
         IObject.isPlain = function (object) {
+            if (!IObject.isObject(object)) {
+                return false;
+            }
+            if (object.constructor &&
+                !this.hasOwn.call(object, "constructor") &&
+                !this.hasOwn.call(object.constructor.prototype, "isPrototypeOf")) {
+                return false;
+            }
             for (var _name in object) {
+                return false;
+            }
+            if (object.item && typeof object.length == "number") {
                 return false;
             }
             return true;
@@ -628,13 +639,12 @@ this.Jsdk.Lang = (function (exports) {
             return this.deepExtend({}, object);
         };
         IObject.keys = function (object) {
-            var hasOwn = Object.prototype.hasOwnProperty;
-            if (hasOwn.call(Object, "keys")) {
+            if (this.hasOwn.call(Object, "keys")) {
                 return Object.keys(object);
             }
             var keys = [];
             for (var key in object) {
-                if (hasOwn.call(object, key)) {
+                if (this.hasOwn.call(object, key)) {
                     keys.push(key);
                 }
             }
@@ -648,7 +658,7 @@ this.Jsdk.Lang = (function (exports) {
             return values;
         };
         IObject.hasKey = function (object, key) {
-            return object != null && Object.prototype.hasOwnProperty.call(object, key);
+            return object != null && this.hasOwn.call(object, key);
         };
         IObject.each = function (object, fn) {
             IArray.each(this.keys(object), function (i, key) {
@@ -656,6 +666,9 @@ this.Jsdk.Lang = (function (exports) {
             });
         };
         IObject.toJson = function (object) {
+            if (JSON && JSON.stringify) {
+                return JSON.stringify(object);
+            }
             if (this.isUndefined(object) || IFunction.isFunction(object)) {
                 return null;
             }
@@ -702,6 +715,7 @@ this.Jsdk.Lang = (function (exports) {
                 return null;
             }
         };
+        IObject.hasOwn = Object.prototype.hasOwnProperty;
         return IObject;
     }());
     var deepEquals = function (a, b, aStack, bStack) {
