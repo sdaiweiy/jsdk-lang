@@ -16,17 +16,12 @@ export default class IStringEscape {
      * @return {String} html编码后的字符串
      */
     static escapeHtml(source: string): string {
-        let s = "";
-        if (source.length == 0)
-            return "";
-
-        s = source.replace(/&/g, "&amp;");
-        s = s.replace(/</g, "&lt;");
-        s = s.replace(/>/g, "&gt;");
-        s = s.replace(/ /g, "&nbsp;");
-        s = s.replace(/\'/g, "&#39;");
-        s = s.replace(/\"/g, "&quot;");
-        return s;
+        return String(source)
+            .replace(/&/g, '&amp;')
+            .replace(/</g, '&lt;')
+            .replace(/>/g, '&gt;')
+            .replace(/"/g, "&quot;")
+            .replace(/'/g, "&#39;");
     }
 
     /**
@@ -35,17 +30,15 @@ export default class IStringEscape {
      * @return {String} html解码后的字符串
      */
     static unEscapeHtml(source: string): string {
-        let s = "";
-        if (source.length == 0)
-            return "";
-
-        s = source.replace(/&amp;/g, "&");
-        s = s.replace(/&lt;/g, "<");
-        s = s.replace(/&gt;/g, ">");
-        s = s.replace(/&nbsp;/g, " ");
-        s = s.replace(/&#39;/g, "\'");
-        s = s.replace(/&quot;/g, "\"");
-        return s;
+        let str = String(source)
+            .replace(/&quot;/g, '"')
+            .replace(/&lt;/g, '<')
+            .replace(/&gt;/g, '>')
+            .replace(/&amp;/g, "&");
+        //处理转义的中文和实体字符
+        return str.replace(/&#([\d]+);/g, function (_0, _1) {
+            return String.fromCharCode(parseInt(_1, 10));
+        });
     }
 
     /**

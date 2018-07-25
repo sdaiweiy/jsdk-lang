@@ -53,7 +53,7 @@ export default class IString {
      * @param context 给定的对象
      * @return 格式化后的结果
      */
-    static format(str: string, context: object): string {
+    static format(str: string, context?: object): string {
         if (!context) {
             context = window;
         }
@@ -102,7 +102,7 @@ export default class IString {
      * @return {Boolean}
      */
     static isBlank(str: string): boolean {
-        return this.trim(str) === "";
+        return !str || this.trim(str) === "";
     }
 
     /**
@@ -118,7 +118,7 @@ export default class IString {
      * @return {Boolean}
      */
     static isEmpty(str: string): boolean {
-        return str === "";
+        return !str || str === "";
     }
 
     /**
@@ -193,13 +193,11 @@ export default class IString {
     /**
      * 从左边填充给定的字符串,当长度小于size的大小时
      * ~~~
-     * IString.padLeft(null,*)   = null
      * IString.padLeft("", 3)     = "   "
      * IString.padLeft("bat", 3)  = "bat"
      * IString.padLeft("bat", 5)  = "  bat"
      * IString.padLeft("bat", 1)  = "bat"
      * IString.padLeft("bat", -1) = "bat"
-     * IString.padLeft(null, *, *)      = null
      * IString.padLeft("", 3, "z")      = "zzz"
      * IString.padLeft("bat", 3, "yz")  = "bat"
      * IString.padLeft("bat", 5, "yz")  = "yzbat"
@@ -220,8 +218,12 @@ export default class IString {
             return str;
         }
 
+        if (!padStr) {
+            padStr = " ";
+        }
+
         let paddingString = new String(),
-            len = (size - str.length) / padStr.length,
+            len = Math.floor((size - str.length) / padStr.length),
             gap = size - (len * padStr.length) - str.length;
 
         for (let i = 0; i < len; i++) {
@@ -235,13 +237,11 @@ export default class IString {
     /**
      * 从右侧填充给定的字符串,当长度小于size的大小时
      * ~~~
-     * IString.padRight(null, *)   = null
      * IString.padRight("", 3)     = "   "
      * IString.padRight("bat", 3)  = "bat"
      * IString.padRight("bat", 5)  = "bat  "
      * IString.padRight("bat", 1)  = "bat"
      * IString.padRight("bat", -1) = "bat"
-     * IString.padRight(null, *, *)      = null
      * IString.padRight("", 3, "z")      = "zzz"
      * IString.padRight("bat", 3, "yz")  = "bat"
      * IString.padRight("bat", 5, "yz")  = "batyz"
@@ -262,8 +262,12 @@ export default class IString {
             return str;
         }
 
+        if (!padStr) {
+            padStr = " ";
+        }
+
         let paddingString = new String(),
-            len = (size - str.length) / padStr.length,
+            len = Math.floor((size - str.length) / padStr.length),
             gap = size - (len * padStr.length) - str.length;
 
         for (let i = 0; i < len; i++) {
@@ -274,7 +278,7 @@ export default class IString {
     }
 
     /**
-     * 替换与正则表达式匹配的子串
+     * 替换与正则表达式匹配的子串，功能与replaceFirst相同
      * @param str 目标字符串
      * @param rule 规定子字符串或要替换的模式的 RegExp 对象。
      * @param replacement 一个字符串值。规定了替换文本或生成替换文本的函数。
@@ -287,19 +291,16 @@ export default class IString {
     /**
      * 替换第一个与正则表达式匹配的子串
      * ~~~
-     * IString.replaceFirst(null, *, *)       = null
-     * IString.replaceFirst("any", null, *)   = "any"
-     * IString.replaceFirst("any", *, null)   = "any"
-     * IString.replaceFirst("", "", "zzz")    = "zzz"
-     * IString.replaceFirst("", ".*", "zzz")  = "zzz"
-     * IString.replaceFirst("", ".+", "zzz")  = ""
-     * IString.replaceFirst("abc", "", "ZZ")  = "ZZabc"
-     * IString.replaceFirst("<__>\n<__>", "<.*>", "z")      = "z\n<__>"
-     * IString.replaceFirst("<__>\n<__>", "(?s)<.*>", "z")  = "z"
-     * IString.replaceFirst("ABCabc123", "[a-z]", "_")          = "ABC_bc123"
-     * IString.replaceFirst("ABCabc123abc", "[^A-Z0-9]+", "_")  = "ABC_123abc"
-     * IString.replaceFirst("ABCabc123abc", "[^A-Z0-9]+", "")   = "ABC123abc"
-     * IString.replaceFirst("Lorem ipsum  dolor   sit", "( +)([a-z]+)", "_$2")  = "Lorem_ipsum  dolor   sit"
+     * IString.replaceFirst("", "", "zzz")     =  "zzz"
+     * IString.replaceFirst("", /.*!/, "zzz")   =  "zzz"
+     * IString.replaceFirst("", /.+/, "zzz")   =  ""
+     * IString.replaceFirst("abc", "", "ZZ")   =  "ZZabc"
+     * IString.replaceFirst("abc", "b", "ZZ")  =   "aZZc"
+     * IString.replaceFirst("<__>\n<__>", /<.*>/, "z")  =  "z\n<__>"
+     * IString.replaceFirst("ABCabc123", /[a-z]/, "_")  =    "ABC_bc123"
+     * IString.replaceFirst("ABCabc123abc", /[^A-Z0-9]+/, "_")   =   "ABC_123abc"
+     * IString.replaceFirst("ABCabc123abc", /[^A-Z0-9]+/, "")    =   "ABC123abc"
+     * IString.replaceFirst("Lorem ipsum  dolor   sit", /( +)([a-z]+)/, "_$2")   =   "Lorem_ipsum  dolor   si
      * ~~~
      * @param str 目标字符串
      * @param rule 规定子字符串或要替换的模式的 RegExp 对象。
