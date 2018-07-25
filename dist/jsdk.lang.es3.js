@@ -1,5 +1,5 @@
 /**
- * jsdk-lang v.0.0.8 - javascript sdk lang utils
+ * jsdk-lang v.0.0.9 - javascript sdk lang utils
  * Copyright (c) 2018 [object Object]
  * MIT
  * https://github.com/sdaiweiy/jsdk-lang
@@ -49,10 +49,10 @@ this.Jsdk.Lang = (function (exports) {
             return str.indexOf(substr, index);
         };
         IString.isBlank = function (str) {
-            return this.trim(str) === "";
+            return !str || this.trim(str) === "";
         };
         IString.isEmpty = function (str) {
-            return str === "";
+            return !str || str === "";
         };
         IString.isNotBlank = function (str) {
             return !this.isBlank(str);
@@ -78,7 +78,10 @@ this.Jsdk.Lang = (function (exports) {
             if (str.length >= size) {
                 return str;
             }
-            var paddingString = new String(), len = (size - str.length) / padStr.length, gap = size - (len * padStr.length) - str.length;
+            if (!padStr) {
+                padStr = " ";
+            }
+            var paddingString = new String(), len = Math.floor((size - str.length) / padStr.length), gap = size - (len * padStr.length) - str.length;
             for (var i = 0; i < len; i++) {
                 paddingString += padStr;
             }
@@ -90,7 +93,10 @@ this.Jsdk.Lang = (function (exports) {
             if (str.length >= size) {
                 return str;
             }
-            var paddingString = new String(), len = (size - str.length) / padStr.length, gap = size - (len * padStr.length) - str.length;
+            if (!padStr) {
+                padStr = " ";
+            }
+            var paddingString = new String(), len = Math.floor((size - str.length) / padStr.length), gap = size - (len * padStr.length) - str.length;
             for (var i = 0; i < len; i++) {
                 paddingString += padStr;
             }
@@ -911,28 +917,22 @@ this.Jsdk.Lang = (function (exports) {
             return String(source).replace(new RegExp("([.*+?^=!:\x24{}()|[\\]\/\\\\])", "g"), '\\\x241');
         };
         IStringEscape.escapeHtml = function (source) {
-            var s = "";
-            if (source.length == 0)
-                return "";
-            s = source.replace(/&/g, "&amp;");
-            s = s.replace(/</g, "&lt;");
-            s = s.replace(/>/g, "&gt;");
-            s = s.replace(/ /g, "&nbsp;");
-            s = s.replace(/\'/g, "&#39;");
-            s = s.replace(/\"/g, "&quot;");
-            return s;
+            return String(source)
+                .replace(/&/g, '&amp;')
+                .replace(/</g, '&lt;')
+                .replace(/>/g, '&gt;')
+                .replace(/"/g, "&quot;")
+                .replace(/'/g, "&#39;");
         };
         IStringEscape.unEscapeHtml = function (source) {
-            var s = "";
-            if (source.length == 0)
-                return "";
-            s = source.replace(/&amp;/g, "&");
-            s = s.replace(/&lt;/g, "<");
-            s = s.replace(/&gt;/g, ">");
-            s = s.replace(/&nbsp;/g, " ");
-            s = s.replace(/&#39;/g, "\'");
-            s = s.replace(/&quot;/g, "\"");
-            return s;
+            var str = String(source)
+                .replace(/&quot;/g, '"')
+                .replace(/&lt;/g, '<')
+                .replace(/&gt;/g, '>')
+                .replace(/&amp;/g, "&");
+            return str.replace(/&#([\d]+);/g, function (_0, _1) {
+                return String.fromCharCode(parseInt(_1, 10));
+            });
         };
         IStringEscape.escapeJavaScript = function (source) {
             return '';

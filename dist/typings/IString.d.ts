@@ -2,7 +2,7 @@ export default class IString {
     static charAt(str: string, index: number): string;
     static contains(str: string, sbustr: string): boolean;
     static endWith(source: string, suffix: string): boolean;
-    static format(str: string, context: object): string;
+    static format(str: string, context?: object): string;
     static indexOf(str: string, substr: string, index?: number): number;
     static isBlank(str: string): boolean;
     static isEmpty(str: string): boolean;

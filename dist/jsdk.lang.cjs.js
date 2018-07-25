@@ -40,10 +40,10 @@ class IString {
         return str.indexOf(substr, index);
     }
     static isBlank(str) {
-        return this.trim(str) === "";
+        return !str || this.trim(str) === "";
     }
     static isEmpty(str) {
-        return str === "";
+        return !str || str === "";
     }
     static isNotBlank(str) {
         return !this.isBlank(str);
@@ -67,7 +67,10 @@ class IString {
         if (str.length >= size) {
             return str;
         }
-        let paddingString = new String(), len = (size - str.length) / padStr.length, gap = size - (len * padStr.length) - str.length;
+        if (!padStr) {
+            padStr = " ";
+        }
+        let paddingString = new String(), len = Math.floor((size - str.length) / padStr.length), gap = size - (len * padStr.length) - str.length;
         for (let i = 0; i < len; i++) {
             paddingString += padStr;
         }
@@ -78,7 +81,10 @@ class IString {
         if (str.length >= size) {
             return str;
         }
-        let paddingString = new String(), len = (size - str.length) / padStr.length, gap = size - (len * padStr.length) - str.length;
+        if (!padStr) {
+            padStr = " ";
+        }
+        let paddingString = new String(), len = Math.floor((size - str.length) / padStr.length), gap = size - (len * padStr.length) - str.length;
         for (let i = 0; i < len; i++) {
             paddingString += padStr;
         }
@@ -838,28 +844,22 @@ class IStringEscape {
         return String(source).replace(new RegExp("([.*+?^=!:\x24{}()|[\\]\/\\\\])", "g"), '\\\x241');
     }
     static escapeHtml(source) {
-        let s = "";
-        if (source.length == 0)
-            return "";
-        s = source.replace(/&/g, "&amp;");
-        s = s.replace(/</g, "&lt;");
-        s = s.replace(/>/g, "&gt;");
-        s = s.replace(/ /g, "&nbsp;");
-        s = s.replace(/\'/g, "&#39;");
-        s = s.replace(/\"/g, "&quot;");
-        return s;
+        return String(source)
+            .replace(/&/g, '&amp;')
+            .replace(/</g, '&lt;')
+            .replace(/>/g, '&gt;')
+            .replace(/"/g, "&quot;")
+            .replace(/'/g, "&#39;");
     }
     static unEscapeHtml(source) {
-        let s = "";
-        if (source.length == 0)
-            return "";
-        s = source.replace(/&amp;/g, "&");
-        s = s.replace(/&lt;/g, "<");
-        s = s.replace(/&gt;/g, ">");
-        s = s.replace(/&nbsp;/g, " ");
-        s = s.replace(/&#39;/g, "\'");
-        s = s.replace(/&quot;/g, "\"");
-        return s;
+        let str = String(source)
+            .replace(/&quot;/g, '"')
+            .replace(/&lt;/g, '<')
+            .replace(/&gt;/g, '>')
+            .replace(/&amp;/g, "&");
+        return str.replace(/&#([\d]+);/g, function (_0, _1) {
+            return String.fromCharCode(parseInt(_1, 10));
+        });
     }
     static escapeJavaScript(source) {
         return '';
