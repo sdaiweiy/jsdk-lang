@@ -165,6 +165,9 @@ this.Jsdk.Define = function (clazz) {
         IString.trim = function (str) {
             return str.replace(/^(\s|\u3000|\xa0|\u00A0)+/, '').replace(/(\s||\u3000|\xa0\u00A0)+$/, '');
         };
+        IString.trimAll = function (str) {
+            return str.replace(/\s|\u3000|\xa0|\u00A0/g, "");
+        };
         IString.trimLeft = function (str) {
             return str.replace(/^(\s|\u3000|\xa0\u00A0)+/, '');
         };

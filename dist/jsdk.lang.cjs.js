@@ -144,6 +144,9 @@ class IString {
     static trim(str) {
         return str.replace(/^(\s|\u3000|\xa0|\u00A0)+/, '').replace(/(\s||\u3000|\xa0\u00A0)+$/, '');
     }
+    static trimAll(str) {
+        return str.replace(/\s|\u3000|\xa0|\u00A0/g, "");
+    }
     static trimLeft(str) {
         return str.replace(/^(\s|\u3000|\xa0\u00A0)+/, '');
     }

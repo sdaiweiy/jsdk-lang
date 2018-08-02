@@ -28,6 +28,7 @@ export default class IString {
     static toString(str: string): string;
     static toUpperCase(str: string): string;
     static trim(str: string): string;
+    static trimAll(str: string): string;
     static trimLeft(str: string): string;
     static trimRight(str: string): string;
     static valueOf(str: any): string;

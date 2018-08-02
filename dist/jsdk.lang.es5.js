@@ -4,6 +4,12 @@
  * MIT
  * https://github.com/sdaiweiy/jsdk-lang
  */
+/**
+ * jsdk-lang v.0.0.10 - javascript sdk lang utils
+ * Copyright (c) 2018 [object Object]
+ * MIT
+ * https://github.com/sdaiweiy/jsdk-lang
+ */
 this.Jsdk = this.Jsdk || {};
 
 this.Jsdk.Define = function (clazz) {
@@ -164,6 +170,9 @@ this.Jsdk.Define = function (clazz) {
         };
         IString.trim = function (str) {
             return str.replace(/^(\s|\u3000|\xa0|\u00A0)+/, '').replace(/(\s||\u3000|\xa0\u00A0)+$/, '');
+        };
+        IString.trimAll = function (str) {
+            return str.replace(/\s|\u3000|\xa0|\u00A0/g, "");
         };
         IString.trimLeft = function (str) {
             return str.replace(/^(\s|\u3000|\xa0\u00A0)+/, '');
