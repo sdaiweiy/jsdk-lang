@@ -4,12 +4,6 @@
  * MIT
  * https://github.com/sdaiweiy/jsdk-lang
  */
-/**
- * jsdk-lang v.0.0.10 - javascript sdk lang utils
- * Copyright (c) 2018 [object Object]
- * MIT
- * https://github.com/sdaiweiy/jsdk-lang
- */
 this.Jsdk = this.Jsdk || {};
 
 this.Jsdk.Define = function (clazz) {
