@@ -449,6 +449,15 @@ export default class IString {
     }
 
     /**
+     * 去除字符串内所有的空格
+     * @param str 给定的字符串
+     * @return 清除后的结果
+     */
+    static trimAll(str:string):string {
+        return str.replace(/\s|\u3000|\xa0|\u00A0/g,"");
+    }
+
+    /**
      * 去除字符串左侧的空格
      * @param str 给定的字符串
      * @return

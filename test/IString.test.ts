@@ -340,6 +340,16 @@ describe("trim function", () => {
     });
 });
 
+describe("trimAll function", () => {
+    it('basic', function () {
+        let sStr = "     半角空格     tab键	 ";
+        expect(IString.trimAll(sStr)).to.eql("半角空格tab键");
+
+        sStr = "　　	  ";
+        expect(IString.trimAll(sStr)).to.eql("");
+    });
+});
+
 describe("trimLeft function", () => {
     it('basic', function () {
         let sStr = "     半角空格tab键	 ";
