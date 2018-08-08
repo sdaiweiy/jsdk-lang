@@ -82,8 +82,8 @@ describe("format function", () => {
         expect(dateFormat).to.be.equal("2009/12/20");
 
         date = new Date(2010, 9, 3, 2, 2, 9, 568);//没有超过12点
-        dateFormat = IDate.format(date, "yyyy-MM-dd HH:mm:ss");
-        expect(dateFormat).to.be.equal("2010-10-03 02:02:09");
+        dateFormat = IDate.format(date, "yyyy-MM-dd HH:mm:ss.SSS");
+        expect(dateFormat).to.be.equal("2010-10-03 02:02:09.568");
         dateFormat = IDate.format(date, "yyyy-MM-dd H:mm:ss");
         expect(dateFormat).to.be.equal("2010-10-03 2:02:09");
         dateFormat = IDate.format(date, "yyyy-MM-dd HH:m:ss");

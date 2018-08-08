@@ -72,6 +72,7 @@ export default class IDate {
      *          m: 不带 0 补齐分表示<br>
      *          ss: 带 0 补齐两位秒表示<br>
      *          s: 不带 0 补齐秒表示<br>
+     *          SSS:毫秒的表示
      *          yyyy: 带 0 补齐的四位年表示<br>
      *          yy: 带 0 补齐的两位年表示<br>
      *          MM: 带 0 补齐的两位月表示<br>
@@ -94,7 +95,8 @@ export default class IDate {
             date2 = date.getDate(),
             hours = date.getHours(),
             minutes = date.getMinutes(),
-            seconds = date.getSeconds();
+            seconds = date.getSeconds(),
+            milliseconds= date.getMilliseconds();
 
         replacer(/yyyy/g, IString.padLeft(year + "", 4, "0"));
         replacer(/yy/g, IString.padLeft(parseInt(year.toString().slice(2), 10) + "", 2, "0"));
@@ -111,6 +113,7 @@ export default class IDate {
         replacer(/m/g, minutes);
         replacer(/ss/g, IString.padLeft(seconds + "", 2, "0"));
         replacer(/s/g, seconds);
+        replacer(/SSS/g, IString.padLeft(milliseconds + "", 3, "0"));
 
         return pattern;
     }
