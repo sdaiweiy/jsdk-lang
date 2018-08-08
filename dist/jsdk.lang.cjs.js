@@ -274,7 +274,7 @@ class IDate {
         function replacer(patternPart, result) {
             pattern = pattern.replace(patternPart, result);
         }
-        let year = date.getFullYear(), month = date.getMonth() + 1, date2 = date.getDate(), hours = date.getHours(), minutes = date.getMinutes(), seconds = date.getSeconds();
+        let year = date.getFullYear(), month = date.getMonth() + 1, date2 = date.getDate(), hours = date.getHours(), minutes = date.getMinutes(), seconds = date.getSeconds(), milliseconds = date.getMilliseconds();
         replacer(/yyyy/g, IString.padLeft(year + "", 4, "0"));
         replacer(/yy/g, IString.padLeft(parseInt(year.toString().slice(2), 10) + "", 2, "0"));
         replacer(/MM/g, IString.padLeft(month + "", 2, "0"));
@@ -289,6 +289,7 @@ class IDate {
         replacer(/m/g, minutes);
         replacer(/ss/g, IString.padLeft(seconds + "", 2, "0"));
         replacer(/s/g, seconds);
+        replacer(/SSS/g, IString.padLeft(milliseconds + "", 3, "0"));
         return pattern;
     }
     static formatToFriendly(date, friendlyPattern) {
