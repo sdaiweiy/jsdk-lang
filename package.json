@@ -40,7 +40,7 @@
     "mocha": "^5.2.0",
     "rollup": "^0.60.1",
     "rollup-plugin-typescript2": "^0.16.1",
-    "run-sequence": "^2.2.1",
+    "gulp4-run-sequence": "^1.0.1",
     "ts-node": "^6.1.1",
     "typedoc": "^0.11.1",
     "typings": "^2.1.1"

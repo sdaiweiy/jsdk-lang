@@ -5,7 +5,7 @@ let gulp = require("gulp"),
     uglify = require("gulp-uglify"),
     rename = require('gulp-rename'),
     header = require("gulp-header"),
-    runSequence = require("run-sequence"),
+    runSequence = require("gulp4-run-sequence"),
     rollupTypescript = require('rollup-plugin-typescript2');
 
 gulp.task("dist-source-es5", function () {
