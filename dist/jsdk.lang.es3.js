@@ -1,12 +1,17 @@
+/**
+ * jsdk-lang v.0.0.10 - javascript sdk lang utils
+ * Copyright (c) 2018 [object Object]
+ * MIT
+ * https://github.com/sdaiweiy/jsdk-lang
+ */
+/**
+ * jsdk-lang v.0.0.10 - javascript sdk lang utils
+ * Copyright (c) 2018 [object Object]
+ * MIT
+ * https://github.com/sdaiweiy/jsdk-lang
+ */
 this.Jsdk = this.Jsdk || {};
-
-this.Jsdk.Define = function (clazz) {
-    var target = window[clazz];
-    delete window[clazz];
-    return target;
-};
-
-(function (exports) {
+this.Jsdk.Lang = (function (exports) {
     'use strict';
 
     var IString = (function () {
@@ -284,6 +289,14 @@ this.Jsdk.Define = function (clazz) {
     var IDate = (function () {
         function IDate() {
         }
+        IDate.add = function (date, value, addType) {
+            var callFun = { 0: "Year", 1: "Month", 2: "Day", 3: "Hours", 4: "Minutes", 5: "Seconds", 6: "Milliseconds" };
+            var funSuffixName = callFun[addType];
+            if (!funSuffixName) {
+                throw new RangeError("addType value must between 0 and 6");
+            }
+            IDate["set" + funSuffixName](date, IDate["get" + funSuffixName](date) + value);
+        };
         IDate.after = function (date, when) {
             return this.compareTo(date, when) > 0;
         };
@@ -973,4 +986,4 @@ this.Jsdk.Define = function (clazz) {
 
     return exports;
 
-}(window));
+}({}));

@@ -255,6 +255,14 @@ class INumber {
 }
 
 class IDate {
+    static add(date, value, addType) {
+        let callFun = { 0: "Year", 1: "Month", 2: "Day", 3: "Hours", 4: "Minutes", 5: "Seconds", 6: "Milliseconds" };
+        let funSuffixName = callFun[addType];
+        if (!funSuffixName) {
+            throw new RangeError("addType value must between 0 and 6");
+        }
+        IDate["set" + funSuffixName](date, IDate["get" + funSuffixName](date) + value);
+    }
     static after(date, when) {
         return this.compareTo(date, when) > 0;
     }

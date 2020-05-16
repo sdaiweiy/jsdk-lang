@@ -6,6 +6,7 @@ export default class IDate {
     static MINUTE: number;
     static SECOND: number;
     static MILLISECOND: number;
+    static add(date: Date, value: number, addType: number): void;
     static after(date: Date, when: Date): boolean;
     static before(date: Date, when: Date): boolean;
     static between(date: Date, start: Date, end: Date): boolean;
