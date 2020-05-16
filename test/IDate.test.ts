@@ -2,6 +2,32 @@ import IDate from "../src/IDate";
 import {expect} from "chai";
 import "mocha";
 
+describe("add function", () => {
+    it("basic", () => {
+        let d1 = new Date(2015, 11, 21, 12, 21, 21);
+        IDate.add(d1, 1,IDate.YEAR);
+        expect(IDate.getYear(d1)).to.be.equal(2016);
+
+        IDate.add(d1, 1,IDate.MONTH);
+        expect(IDate.getYear(d1)).to.be.equal(2017);
+        expect(IDate.getMonth(d1)).to.be.equal(0);
+
+        IDate.add(d1, 1,IDate.DAY);
+        expect(IDate.getDay(d1)).to.be.equal(22);
+        IDate.add(d1, -1,IDate.DAY);
+        expect(IDate.getDay(d1)).to.be.equal(21);
+
+        IDate.add(d1, 1,IDate.HOUR);
+        expect(IDate.getHours(d1)).to.be.equal(13);
+
+        IDate.add(d1, 1,IDate.MINUTE);
+        expect(IDate.getMinutes(d1)).to.be.equal(22);
+
+        IDate.add(d1, 1,IDate.SECOND);
+        expect(IDate.getSeconds(d1)).to.be.equal(22);
+    });
+});
+
 describe("after function", () => {
     it("basic", () => {
         let d1 = new Date(2015, 12, 21, 12, 21, 21);

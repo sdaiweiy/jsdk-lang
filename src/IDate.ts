@@ -14,6 +14,21 @@ export default class IDate {
     static SECOND = 5;
     static MILLISECOND = 6;
 
+    /***
+     * 为给定的日期和增加类型增加相关数值,注意该方法会修改传递进来的date的值
+     * @param date 目标日期
+     * @param value 增加数值
+     * @param addType: 增加类型 IDate.DAY(日期) | IDate.HOUR(小时) | IDate.MINUTE(分钟) | IDate.SECOND(秒) | IDate.MILLISECOND(毫秒)
+     */
+    static add(date: Date, value: number, addType: number): void {
+        let callFun = {0: "Year", 1: "Month", 2: "Day", 3: "Hours", 4: "Minutes", 5: "Seconds", 6: "Milliseconds"};
+        let funSuffixName = callFun[addType];
+        if (!funSuffixName) {
+            throw new RangeError("addType value must between 0 and 6");
+        }
+        IDate["set" + funSuffixName](date, IDate["get" + funSuffixName](date) + value);
+    }
+
     /**
      * 判断给定时间是否在某个时间之后
      * @param date 目标日期
@@ -96,7 +111,7 @@ export default class IDate {
             hours = date.getHours(),
             minutes = date.getMinutes(),
             seconds = date.getSeconds(),
-            milliseconds= date.getMilliseconds();
+            milliseconds = date.getMilliseconds();
 
         replacer(/yyyy/g, IString.padLeft(year + "", 4, "0"));
         replacer(/yy/g, IString.padLeft(parseInt(year.toString().slice(2), 10) + "", 2, "0"));
@@ -361,6 +376,7 @@ export default class IDate {
         if (obj.S !== 0) date.setMilliseconds(obj.S); // 如果设置了毫秒
         return date;
     }
+
 
     /**
      * 用于设置一个月的某一天
